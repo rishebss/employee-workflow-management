@@ -609,9 +609,147 @@ function showToast(message, type) {
     }, 3000);
 }
 
+// GM Assignment functionality (similar to HOB implementation)
+function initializeGMAssignment() {
+    // Handle select updates (assignments, priority)
+    document.querySelectorAll('.hob-assignment').forEach(element => {
+        if (element.tagName === 'SELECT') {
+            element.dataset.previousValue = element.value;
+            element.addEventListener('change', function() {
+                console.debug('[GM] select changed', {
+                    leadId: this.dataset.leadId,
+                    field: this.dataset.field,
+                    value: this.value
+                });
+                handleGMFieldUpdate(this);
+            });
+        }
+    });
+
+    // Handle free-text status input updates
+    document.querySelectorAll('.status-input.hob-assignment').forEach(input => {
+        input.dataset.originalValue = input.value;
+        const commitChange = () => {
+            const leadId = input.dataset.leadId;
+            const newStatus = (input.value || '').trim();
+            if (!newStatus) {
+                showToast('Status cannot be empty', 'error');
+                input.value = input.dataset.originalValue;
+                return;
+            }
+            updateGMLeadField(leadId, 'status', newStatus)
+                .then(() => {
+                    input.dataset.originalValue = newStatus;
+                    const row = input.closest('tr');
+                    if (row) row.dataset.status = newStatus.toLowerCase();
+                    showToast('Status updated successfully', 'success');
+                })
+                .catch(() => {
+                    input.value = input.dataset.originalValue;
+                    showToast('Failed to update status', 'error');
+                });
+        };
+        input.addEventListener('blur', commitChange);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                commitChange();
+                input.blur();
+            }
+            if (e.key === 'Escape') {
+                input.value = input.dataset.originalValue;
+                input.blur();
+            }
+        });
+    });
+
+    // Handle program input updates
+    document.querySelectorAll('.program-input.hob-assignment').forEach(input => {
+        input.dataset.originalValue = input.value;
+        input.addEventListener('change', function() {
+            const leadId = this.dataset.leadId;
+            const newProgram = this.value;
+            updateGMLeadField(leadId, 'program', newProgram)
+                .then(() => {
+                    this.dataset.originalValue = newProgram;
+                    const row = this.closest('tr');
+                    if (row) row.dataset.program = newProgram.toLowerCase();
+                    showToast('Program updated successfully', 'success');
+                })
+                .catch(() => {
+                    this.value = this.dataset.originalValue;
+                    showToast('Failed to update program', 'error');
+                });
+        });
+    });
+}
+
+function handleGMFieldUpdate(selectElement) {
+    const leadId = selectElement.dataset.leadId;
+    const field = selectElement.dataset.field;
+    const value = selectElement.value;
+    console.debug('[GM] handleGMFieldUpdate', { leadId, field, value });
+
+    updateGMLeadField(leadId, field, value)
+        .then((response) => {
+            console.debug('[GM] updateGMLeadField success', response);
+            const row = selectElement.closest('tr');
+            updateGMRowSearchData(row, field, value);
+            selectElement.dataset.previousValue = value;
+            let fieldName = field.replace('_', ' ');
+            fieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+            showToast(`${fieldName} updated successfully`, 'success');
+        })
+        .catch((error) => {
+            console.error(`[GM] Error updating ${field}:`, error?.response?.data || error);
+            if (error.response && error.response.data && error.response.data.message) {
+                showToast(error.response.data.message, 'error');
+            } else {
+                showToast(`Failed to update ${field}`, 'error');
+            }
+            selectElement.value = selectElement.dataset.previousValue;
+        });
+}
+
+function updateGMLeadField(leadId, field, value) {
+    return new Promise((resolve, reject) => {
+        console.debug('[GM] POST -> gm_assign_lead', { leadId, field, value });
+        axios.post('{% url "gm:gm_assign_lead" %}', JSON.stringify({
+            lead_id: leadId,
+            field: field,
+            value: value
+        }), {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => {
+            console.debug('[GM] assign response', response?.data);
+            resolve(response.data);
+        })
+        .catch(error => {
+            console.error('[GM] assign error', error?.response?.data || error);
+            reject(error);
+        });
+    });
+}
+
+function updateGMRowSearchData(row, field, value) {
+    if (!row) return;
+    if (field === 'assigned_to') {
+        row.dataset.staff = value === '' ? '' : value;
+    } else if (field === 'priority') {
+        row.dataset.priority = value.toLowerCase();
+    }
+    filterLeads();
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     filterLeads();
+    initializeGMAssignment();
     
     // Add better event listeners with debouncing
     let filterTimeout;
