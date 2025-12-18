@@ -532,9 +532,10 @@
            <i class="fa-solid fa-file-lines"></i>
             <span>Reports</span>
           </a>
-          <a  id="tasksBtn" class="files-btn" style="margin-left: 0.5rem;">
+          <a id="tasksBtn" class="files-btn" style="margin-left: 0.5rem;">
            <i class="fas fa-tasks"></i>
             <span>Tasks</span>
+            <span id="taskCount" style="display:none; margin-left:8px; background:#ef4444; color:#fff; border-radius:12px; padding:2px 6px; font-size:0.75rem; font-weight:600;"></span>
           </a>
           <a href="{% url 'accounts:all_leads' %}" class="files-btn" style="margin-left: 0.5rem;">
             <i class="fa-solid fa-eye"></i>
@@ -760,16 +761,58 @@
     function loadTasks() {
       fetch('{% url "tasks:my_tasks_ajax" %}', {
         method: 'GET',
+        credentials: 'same-origin',
         headers: {
+          'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
           'X-CSRFToken': getCookie('csrftoken')
         }
       })
-      .then(response => response.json())
+      .then(async (response) => {
+        console.debug('[MEDIA] loadTasks response status:', response.status, 'content-type:', response.headers.get('content-type'));
+        const contentType = response.headers.get('content-type') || '';
+
+        // If response is not OK, inspect body for login/HTML and show targeted message
+        if (!response.ok) {
+          const text = await response.text();
+          console.warn('[MEDIA] loadTasks non-OK response:', response.status, text);
+
+          // Detect redirect to login or HTML login page
+          if (response.status === 302 || contentType.includes('text/html') && /login|username|password|csrf/i.test(text)) {
+            taskList.innerHTML = `
+              <div class="task-error">Please sign in to view tasks. <button class="btn-primary" onclick="window.location.href='${"{% url "accounts:quick_login" %}"}'">Sign in</button>
+              <button class="btn btn-secondary" style="margin-left:.5rem;" onclick="loadTasks()">Retry</button>
+              </div>`;
+          } else {
+            taskList.innerHTML = `<div class="task-error">Error loading tasks (status ${response.status})</div>`;
+          }
+          return null;
+        }
+
+        if (!contentType.includes('application/json')) {
+          const text = await response.text();
+          console.warn('[MEDIA] loadTasks unexpected content-type, response text:', text);
+          if (/login|username|password/i.test(text)) {
+            taskList.innerHTML = `
+              <div class="task-error">Please sign in to view tasks. <button class="btn-primary" onclick="window.location.href='${"{% url "accounts:quick_login" %}"}'">Sign in</button>
+              <button class="btn btn-secondary" style="margin-left:.5rem;" onclick="loadTasks()">Retry</button>
+              </div>`;
+          } else {
+            taskList.innerHTML = `<div class="task-error">Error loading tasks: unexpected response</div>`;
+          }
+          return null;
+        }
+
+        return response.json();
+      })
       .then(data => {
+        if (!data) return;
         if (data.status === 'success') {
           displayTasks(data.tasks);
           updateTaskCount(data.total_tasks);
+        } else {
+          console.warn('[MEDIA] loadTasks returned error payload:', data);
+          taskList.innerHTML = `<div class="task-error">Error loading tasks: ${data.message || 'unknown'}</div>`;
         }
       })
       .catch(error => {
@@ -823,13 +866,23 @@
       taskList.innerHTML = tasksHTML;
     }
 
-    // Update task count
+    // Update task count (robust: creates badge if missing)
     function updateTaskCount(count) {
+      let taskCountEl = document.getElementById('taskCount');
+      const btn = document.getElementById('tasksBtn');
+      if (!taskCountEl && btn) {
+        taskCountEl = document.createElement('span');
+        taskCountEl.id = 'taskCount';
+        taskCountEl.style.cssText = 'display:none; margin-left:8px; background:#ef4444; color:#fff; border-radius:12px; padding:2px 6px; font-size:0.75rem; font-weight:600;';
+        btn.appendChild(taskCountEl);
+      }
+      if (!taskCountEl) return; // nothing to update
+
       if (count > 0) {
-        taskCount.textContent = count;
-        taskCount.style.display = 'inline';
+        taskCountEl.textContent = count;
+        taskCountEl.style.display = 'inline';
       } else {
-        taskCount.style.display = 'none';
+        taskCountEl.style.display = 'none';
       }
     }
 
@@ -837,8 +890,10 @@
     function updateTaskStatus(taskId, newStatus) {
       fetch(`/tasks/${taskId}/update-status/`, {
         method: 'POST',
+        credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
           'X-CSRFToken': getCookie('csrftoken')
         },
