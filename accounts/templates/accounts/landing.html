@@ -209,6 +209,34 @@
             color: var(--text-secondary);
             margin-bottom: 1rem;
         }
+
+        /* Alert / note styles */
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            font-size: 0.95rem;
+        }
+
+        .alert-note {
+            background: linear-gradient(90deg, rgba(245,158,11,0.06), rgba(255,255,255,0.01));
+            border-left: 4px solid #f59e0b; /* accent amber */
+        }
+
+        .alert i {
+            color: #f59e0b;
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+
+        .alert strong { font-weight: 600; color: var(--text-primary); }
+
         
         .form-group {
             margin-bottom: 1.25rem;
@@ -259,7 +287,14 @@
             justify-content: center;
             gap: 0.5rem;
             letter-spacing: -0.01em;
+        }
+
+        /* Utility class to make buttons span full width */
+        .btn-full {
             width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .btn-primary {
@@ -276,6 +311,22 @@
         
         .btn-primary:active {
             transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-hover);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 0.875rem;
+            font-size: 0.8125rem;
         }
         
         /* Admin Badge */
@@ -321,6 +372,213 @@
             letter-spacing: -0.01em;
         }
         
+        /* Credentials Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 80vh;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-title i {
+            color: var(--text-secondary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(80vh - 140px);
+        }
+
+        .credentials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .credential-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .credential-card:hover {
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .credential-role {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .credential-detail {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .credential-detail:last-child {
+            border-bottom: none;
+        }
+
+        .credential-label {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .credential-value {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
+            letter-spacing: -0.01em;
+            font-weight: 500;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            margin-left: 0.75rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+
+        .copy-btn.copied {
+            background: rgba(255, 255, 255, 0.1);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .credential-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .modal-footer p {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        /* Scrollbar Styling */
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 3px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
         /* Responsive Design */
         @media (max-width: 968px) {
             .container {
@@ -344,6 +602,18 @@
                 top: 1.5rem;
                 right: 1.5rem;
             }
+
+            .credentials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-container {
+                max-height: 90vh;
+            }
+
+            .modal-body {
+                max-height: calc(90vh - 140px);
+            }
         }
 
         @media (max-width: 640px) {
@@ -365,6 +635,14 @@
 
             .features {
                 margin-top: 2rem;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .modal-header {
+                padding: 1.25rem 1.5rem;
             }
         }
         
@@ -411,19 +689,42 @@
 
         .feature-item:nth-child(1) { animation-delay: 0.2s; }
         .feature-item:nth-child(2) { animation-delay: 0.3s; }
-        .feature-item:nth-child(3) { animation-delay: 0.4s; }
     </style>
 </head>
 <body>
     <div class="grid-background"></div>
     <div class="gradient-overlay"></div>
 
-    <div class="admin-badge" onclick="window.location='/admin';">
+    <div class="admin-badge" id="adminBadge">
         <div class="admin-badge-content">
             <div class="admin-icon">
                 <i class="fa-solid fa-user-tie"></i>
             </div>
             <span>User Credentials</span>
+        </div>
+    </div>
+
+    <!-- Credentials Modal -->
+    <div class="modal-overlay" id="credentialsModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-key"></i>
+                    <span>User Credentials for Testing</span>
+                </div>
+                <button class="modal-close" id="closeModal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="credentials-grid" id="credentialsGrid">
+                    <!-- Credentials will be dynamically inserted here -->
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+            </div>
         </div>
     </div>
 
@@ -458,7 +759,10 @@
             <div>
                 <div class="card">
                     <h3>Sign in</h3>
-                    <p class="card-subtitle">Note :This is not the offical app, all the users and datas are created for testing the functionalities.</p>
+                    <div class="alert alert-note" role="status" aria-live="polite">
+                        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                        <div><strong>Important:</strong> This is a demo environment. All user accounts and data are provided for testing purposes.</div>
+                    </div>
                     
                     <form method="post" action="{% url 'accounts:quick_login' %}" id="loginForm">
                         {% csrf_token %}
@@ -471,7 +775,7 @@
                             <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
                         </div>
                         <div style="margin-top: 1.5rem;">
-                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
                                 <span>Sign In</span>
                             </button>
                         </div>
@@ -482,6 +786,157 @@
     </div>
     
     <script>
+        // Credentials data
+        const credentials = [
+            { username: "allen_manager", role: "general manager", password: "allen@12345" },
+            { username: "kevin_bh", role: "business head", password: "kevin@12345" },
+            { username: "linda_trainer", role: "trainer", password: "linda@12345" },
+            { username: "ayan_admissions", role: "admission manager", password: "ayan@12345" },
+            { username: "riya_admissions", role: "admission manager", password: "riya@12345" },
+            { username: "aleena_operations", role: "operation manager", password: "aleena@12345" },
+            { username: "maria_ae", role: "admission executive", password: "maria@12345" },
+            { username: "john_ae", role: "admission executive", password: "john@12345" },
+            { username: "natasha_hr", role: "human resource", password: "natasha@12345" },
+            { username: "leya_cm", role: "center manager", password: "leya@12345" }
+        ];
+
+        // Modal elements
+        const adminBadge = document.getElementById('adminBadge');
+        const credentialsModal = document.getElementById('credentialsModal');
+        const closeModal = document.getElementById('closeModal');
+        const credentialsGrid = document.getElementById('credentialsGrid');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        // Show modal
+        adminBadge.addEventListener('click', () => {
+            credentialsModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            credentialsModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside
+        credentialsModal.addEventListener('click', (e) => {
+            if (e.target === credentialsModal) {
+                credentialsModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && credentialsModal.style.display === 'flex') {
+                credentialsModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Render credentials
+        function renderCredentials() {
+            credentialsGrid.innerHTML = '';
+            
+            credentials.forEach(cred => {
+                const card = document.createElement('div');
+                card.className = 'credential-card';
+                
+                card.innerHTML = `
+                    <div class="credential-role">${cred.role}</div>
+                    <div class="credential-detail">
+                        <span class="credential-label">Username</span>
+                        <div style="display: flex; align-items: center;">
+                            <span class="credential-value">${cred.username}</span>
+                            <button class="copy-btn" data-value="${cred.username}" data-type="username">
+                                <i class="fa-solid fa-copy"></i>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="credential-detail">
+                        <span class="credential-label">Password</span>
+                        <div style="display: flex; align-items: center;">
+                            <span class="credential-value">${cred.password}</span>
+                            <button class="copy-btn" data-value="${cred.password}" data-type="password">
+                                <i class="fa-solid fa-copy"></i>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="credential-row">
+                        <button class="btn btn-secondary btn-sm use-credentials" data-username="${cred.username}" data-password="${cred.password}">
+                            <i class="fa-solid fa-sign-in-alt"></i>
+                            Use This Account
+                        </button>
+                    </div>
+                `;
+                
+                credentialsGrid.appendChild(card);
+            });
+
+            // Add event listeners to copy buttons
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const value = btn.getAttribute('data-value');
+                    const type = btn.getAttribute('data-type');
+                    
+                    try {
+                        await navigator.clipboard.writeText(value);
+                        
+                        // Visual feedback
+                        btn.classList.add('copied');
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Copied</span>';
+                        
+                        // Show toast if available
+                        if (window.showToast) {
+                            window.showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} copied!`, 'success');
+                        }
+                        
+                        // Reset button after 2 seconds
+                        setTimeout(() => {
+                            btn.classList.remove('copied');
+                            btn.innerHTML = '<i class="fa-solid fa-copy"></i><span>Copy</span>';
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy: ', err);
+                        if (window.showToast) {
+                            window.showToast('Failed to copy', 'error');
+                        }
+                    }
+                });
+            });
+
+            // Add event listeners to "Use This Account" buttons
+            document.querySelectorAll('.use-credentials').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const username = btn.getAttribute('data-username');
+                    const password = btn.getAttribute('data-password');
+                    
+                    // Fill the form
+                    usernameInput.value = username;
+                    passwordInput.value = password;
+                    
+                    // Close modal
+                    credentialsModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    
+                    // Focus on the username field
+                    usernameInput.focus();
+                    
+                    // Show toast if available
+                    if (window.showToast) {
+                        window.showToast(`Credentials for ${username} loaded`, 'success');
+                    }
+                });
+            });
+        }
+
+        // Login form handling
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.classList.add('loading');
@@ -495,6 +950,9 @@
         window.addEventListener('load', function() {
             const u = document.getElementById('username');
             if (u) u.focus();
+            
+            // Render credentials
+            renderCredentials();
         });
     </script>
 </body>

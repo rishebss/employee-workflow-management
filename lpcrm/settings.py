@@ -194,9 +194,9 @@ import cloudinary.api
 
 # Configure with your credentials from the Cloudinary Dashboard
 cloudinary.config( 
-    cloud_name = "dzmvrjvfs",
-    api_key = "529255454263344", 
-    api_secret = "TwM8oZiBNiLwdYwDjnPekSvSEXU",  # Keep this secret!
+    cloud_name = "dviwae8cc",
+    api_key = "648931798475267", 
+    api_secret = "z42eQuctIBI3-Z1LHYJTNMyuoxE",  # Keep this secret!
     secure = True
 )
 MEDIA_URL = '/media/'
