@@ -192,6 +192,33 @@
       color: var(--text-tertiary);
     }
 
+    /* Style select elements inside the form to match dark theme and ensure readable options */
+    .form-container select,
+    .form-container select.form-control {
+      background: rgba(255,255,255,0.01);
+      color: var(--text-primary);
+      border: 1px solid rgba(255,255,255,0.03);
+      padding: 0.45rem 0.6rem;
+      border-radius: 6px;
+      height: 36px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .form-container select option {
+      color: var(--text-primary);
+      background: var(--card-bg);
+    }
+
+    /* Small arrow indicator for desktop select inputs */
+    .form-container select {
+      background-image: linear-gradient(45deg, transparent 50%, var(--text-primary) 50%), linear-gradient(135deg, var(--text-primary) 50%, transparent 50%), linear-gradient(to right, rgba(255,255,255,0.02), rgba(255,255,255,0.02));
+      background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px), 100% 0;
+      background-size: 5px 5px, 5px 5px, 1px 1.5em;
+      background-repeat: no-repeat;
+    }
+
     /* Footer for the form: clean and minimal */
     .form-footer {
       position: sticky;
