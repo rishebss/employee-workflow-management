@@ -182,6 +182,8 @@
       border: 1px solid var(--border-color);
       box-shadow: var(--shadow-large);
     }
+
+    /* Subtle, minimal scrollbar for vertical tables */
     .table-scroll-vert {
       max-height: 70vh;
       overflow-y: auto;
@@ -189,22 +191,47 @@
       position: relative;
       width: 100%;
       padding-right: 8px;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      scrollbar-width: thin; /* Firefox */
+      scrollbar-color: rgba(255,255,255,0.06) transparent;
+      -webkit-overflow-scrolling: touch;
     }
     .table-scroll-vert::-webkit-scrollbar {
       width: 6px;
+      height: 6px;
     }
     .table-scroll-vert::-webkit-scrollbar-track {
       background: transparent;
-      border-radius: 3px;
+      border-radius: 6px;
     }
     .table-scroll-vert::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 3px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.065));
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.02);
     }
     .table-scroll-vert::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.14));
+    }
+
+    /* Minimal, aesthetic scrollbar for modal content (dark theme) */
+    #modalContent {
+      scrollbar-width: thin; /* Firefox */
+      scrollbar-color: rgba(255,255,255,0.07) transparent;
+      -webkit-overflow-scrolling: touch;
+    }
+    #modalContent::-webkit-scrollbar {
+      width: 8px;
+    }
+    #modalContent::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 8px;
+    }
+    #modalContent::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.09));
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.02);
+    }
+    #modalContent::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.18));
     }
     table.bc-table {
       background: var(--card-bg);
@@ -536,10 +563,7 @@
     <div class="dashboard-header">
       <h1 class="dashboard-title">STAFF REPORTS</h1>
       <div class="header-controls">
-        <button class="btn btn-secondary" onclick="window.history.back()">
-          <i class="fas fa-arrow-left"></i>
-          <span>Back</span>
-        </button>
+        
         <button class="btn btn-primary" id="addReportBtn">
           <i class="fas fa-plus"></i>
           <span>Add Report</span>
