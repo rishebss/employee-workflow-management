@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
+    
     :root {
       --bg-primary: #000000;
       --bg-secondary: #0d0d0d;
@@ -42,33 +41,31 @@
       --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
       --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
     }
-
+    
     * {
-      margin: 0;
-      padding: 0;
+      margin: 0; 
+      padding: 0; 
       box-sizing: border-box;
     }
-
+    
     body {
       background: var(--bg-primary);
-      background-image:
-        radial-gradient(circle at 25% 25%, #1f1f1f 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, #1a1a1a 0%, transparent 50%);
+      background-image: 
+        radial-gradient(circle at 25% 25%, rgba(30, 30, 30, 0.5) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(20, 20, 20, 0.5) 0%, transparent 50%);
       color: var(--text-primary);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh; 
       line-height: 1.6;
       padding: 1rem;
     }
-
+    
     .dashboard-container {
       max-width: 1400px;
       margin: 0 auto;
       padding: 1.5rem;
     }
-
+    
     .dashboard-header {
       margin-bottom: 2rem;
       display: flex;
@@ -77,19 +74,30 @@
       flex-wrap: wrap;
       gap: 1.5rem;
     }
-
+    
     .dashboard-title {
-      font-size: clamp(2rem, 4vw, 2.5rem);
+      font-size: clamp(1.8rem, 4vw, 2.2rem);
       font-weight: 700;
       letter-spacing: -0.025em;
-      background: linear-gradient(135deg, #989595 0%, #45454a 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      position: relative;
+      display: inline-block;
     }
-
-
-
+    
+    .dashboard-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue-accent), var(--purple-accent));
+      border-radius: 3px;
+    }
+    
     .attendance-layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -97,69 +105,132 @@
       margin-top: 1rem;
     }
 
+    /* Constrain layout to viewport and prevent outer scrolling; lists will scroll instead */
+    .attendance-layout {
+      height: calc(100vh - 6rem); /* accounts for header and padding */
+      overflow: hidden; /* remove outer scrollbar */
+      align-items: stretch;
+    }
+
+    /* Ensure each card fills the layout height so inner lists can scroll */
+    .attendance-layout > .attendance-card {
+      height: 100%;
+    }
+
+    /* Make lists the ONLY scrollable areas */
+    .mark-card .attendance-list,
+    .attendance-card .history-list {
+      max-height: none; /* let the flexbox sizing control height */
+      flex: 1 1 auto;
+      overflow-y: auto;
+    }
+    
     @media (max-width: 968px) {
       .attendance-layout {
         grid-template-columns: 1fr;
       }
     }
-
+    
+    /* Make attendance cards minimal and compact to match media.html */
     .attendance-card {
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
       border-radius: 12px;
-      padding: 0;
-      border: 1px solid rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255,255,255,0.03);
       box-shadow: none;
-      backdrop-filter: blur(2px);
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: 70vh;
-      /* Match media.html height constraint */
+      transition: transform 0.12s ease, border-color 0.12s ease;
     }
 
     .attendance-card:hover {
-      border-color: rgba(255, 255, 255, 0.06);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+      border-color: rgba(255,255,255,0.04);
     }
 
     .card-header {
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-      background: transparent;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      backdrop-filter: blur(4px);
     }
 
     .card-title {
-      font-size: 1.25rem;
+      font-size: 1.05rem;
       font-weight: 600;
       color: var(--text-primary);
       margin: 0;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
 
     .card-title i {
-      color: var(--text-secondary);
+      color: var(--blue-accent);
       font-size: 1rem;
     }
 
     .card-body {
-      padding: 1.25rem;
-      flex: 1;
-      overflow: hidden;
-      /* container handles scroll internally if needed */
+      padding: 1rem;
       display: flex;
       flex-direction: column;
+      gap: 0.5rem;
+      /* do not scroll here — only the list should scroll */
+      overflow: visible;
     }
 
+    /* Make the header + quick-actions sticky at the top */
+    .mark-top {
+      position: sticky;
+      top: 0;
+      z-index: 7;
+      background: linear-gradient(180deg, rgba(255,255,255,0.006), rgba(255,255,255,0.002));
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+    }
+
+    .mark-top .card-header { margin: 0; padding: 0.8rem 0.95rem; }
+
+    /* List takes remaining space and is the only scrollable area */
+    .mark-card .attendance-list {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+      padding-bottom: 0.5rem; /* space so last item isn't hidden behind footer */
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.06) transparent;
+      max-height: 48vh;
+    }
+
+    /* Sticky footer so Save stays visible */
+    .mark-card .card-footer {
+      position: sticky;
+      bottom: 0;
+      z-index: 8;
+      background: linear-gradient(180deg, rgba(255,255,255,0.004), rgba(255,255,255,0.002));
+      padding: 0.6rem 0.9rem;
+      border-top: 1px solid rgba(255,255,255,0.02);
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .mark-card .card-footer .submit-btn { min-width: 180px; }
+
+    /* Keep quick actions compact inside sticky top */
+    .mark-top .quick-actions { display: flex; gap: 0.5rem; padding: 0 0.95rem; margin-top: 0.5rem; }
+
+    /* small visual tweak so sticky header/footer blend in */
+    .mark-top, .mark-card .card-footer { backdrop-filter: blur(4px); }
+
+    /* Compact current date box */
     .current-date {
-      font-size: 0.9rem;
-      color: var(--text-tertiary);
+      font-size: 1rem;
+      color: var(--text-secondary);
       margin-bottom: 1rem;
-      padding: 0.6rem;
-      background: rgba(255, 255, 255, 0.01);
+      padding: 0.7rem;
+      background: rgba(255,255,255,0.01);
       border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.02);
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.03);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -167,131 +238,172 @@
       font-weight: 500;
     }
 
+    /* Tighter quick action buttons */
     .quick-actions {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     .btn-quick {
-      padding: 0.5rem 0.75rem;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      background: rgba(255, 255, 255, 0.01);
-      color: var(--text-tertiary);
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.01);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.65rem;
+      background: linear-gradient(90deg, var(--blue-accent), var(--purple-accent));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
       cursor: pointer;
-      font-size: 0.8rem;
+      margin-top: 1rem;
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.22);
+    }
+
+    /* Make list items tighter */
+    .attendance-list .attendance-item,
+    .history-list .history-item {
+      padding: 0.75rem 0.6rem;
+    }
+
+    /* Layout: make both cards compact and equal-height like media containers (slightly taller) */
+    .attendance-layout > .attendance-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 420px; /* increased from 280px */
+      max-height: 70vh;  /* allow more vertical space */
+    }
+
+    .card-body {
+      flex: 1 1 auto;
+      overflow: auto;
+      padding: 1rem;
+      max-height: 65vh; /* moderately increased to allow more content */
+    }
+
+    /* Compact current date box */
+    .current-date {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      padding: 0.55rem 0.6rem;
+      background: rgba(255,255,255,0.01);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.02);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
       font-weight: 500;
-      transition: all 0.2s ease;
+    }
+
+    /* Tighter quick action buttons */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-quick {
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.02);
+      background: rgba(255,255,255,0.01);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      min-height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.4rem;
-      min-height: 36px;
     }
 
     .btn-quick:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-hover);
-    }
-
-    .btn-quick.present {
-      border-color:white;
-      color:white;
-    }
-
-    .btn-quick.present:hover {
-      background: rgba(16, 185, 129, 0.1);
-      border-color: var(--green-accent);
-      color: var(--green-accent);
-    }
-
-    .btn-quick.absent {
-      border-color: white;
-      color: white;
-    }
-
-    .btn-quick.absent:hover {
-      background: rgba(239, 68, 68, 0.1);
-      border-color: var(--red-accent);
-      color: var(--red-accent);
-    }
-
-    .btn-quick.no-session {
-      border-color: white;
-      color: white;
-    }
-
-    .btn-quick.no-session:hover {
-      background: rgba(245, 158, 11, 0.1);
-      border-color: var(--orange-accent);
-      color: var(--orange-accent);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.14);
+      border-color: rgba(255,255,255,0.03);
     }
 
     .attendance-list {
-      flex: 1;
+      max-height: 44vh; /* increased from 36vh */
       overflow-y: auto;
       padding-right: 0.5rem;
-      max-height: none;
-      /* Let flexbox handle it */
     }
 
-    .attendance-list::-webkit-scrollbar,
-    .history-list::-webkit-scrollbar {
+    .attendance-list::-webkit-scrollbar, .history-list::-webkit-scrollbar {
       width: 6px;
     }
 
-    .attendance-list::-webkit-scrollbar-track,
-    .history-list::-webkit-scrollbar-track {
-      background: transparent;
-      border-radius: 6px;
+    .attendance-list::-webkit-scrollbar-track, .history-list::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+      border-radius: 3px;
     }
 
-    .attendance-list::-webkit-scrollbar-thumb,
-    .history-list::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.06));
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.02);
+    .attendance-list::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 3px;
     }
 
-    .attendance-list::-webkit-scrollbar-thumb:hover,
-    .history-list::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.12));
+    .attendance-list::-webkit-scrollbar-thumb:hover, .history-list::-webkit-scrollbar-thumb:hover {
+      background: var(--border-hover);
     }
-
+    
     .attendance-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.75rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-      transition: background 0.18s;
-      border-radius: 4px;
-      margin-bottom: 0;
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition-fast);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.25rem;
     }
-
+    
     .attendance-item:last-child {
       border-bottom: none;
       margin-bottom: 0;
     }
-
+    
     .attendance-item:hover {
       background: rgba(255, 255, 255, 0.03);
       transform: translateX(2px);
     }
-
+    
     .student-info {
       flex: 1;
     }
-
+    
     .student-name {
       font-weight: 500;
       color: var(--text-primary);
       font-size: 1rem;
     }
-
+    
     .student-batch {
       font-size: 0.8rem;
       color: var(--text-secondary);
@@ -299,9 +411,8 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      opacity: 0.7;
     }
-
+    
     .student-batch::before {
       content: '';
       display: inline-block;
@@ -310,152 +421,163 @@
       border-radius: 50%;
       background: var(--blue-accent);
     }
-
+    
     .attendance-options {
       display: flex;
       gap: 1rem;
       align-items: center;
     }
-
+    
     .radio-group {
       display: flex;
       gap: 0.5rem;
     }
-
+    
     .radio-label {
       display: flex;
       align-items: center;
       gap: 0.25rem;
       font-size: 0.8rem;
       cursor: pointer;
-      padding: 0.35rem 0.6rem;
-      border-radius: 4px;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
       border: 1px solid transparent;
-      transition: all 0.2s ease;
+      transition: var(--transition-fast);
       font-weight: 500;
-      color: var(--text-tertiary);
     }
-
+    
     .radio-label:hover {
       background: var(--bg-secondary);
       border-color: var(--border-color);
     }
-
+    
     .radio-label.present.checked {
       background: rgba(16, 185, 129, 0.15);
       border-color: var(--green-accent);
       color: var(--green-accent);
     }
-
+    
     .radio-label.absent.checked {
       background: rgba(239, 68, 68, 0.15);
       border-color: var(--red-accent);
       color: var(--red-accent);
     }
-
+    
     .radio-label.no-session.checked {
       background: rgba(245, 158, 11, 0.15);
       border-color: var(--orange-accent);
       color: var(--orange-accent);
     }
-
+    
     .radio-input {
       display: none;
     }
-
+    
     .submit-btn {
       width: 100%;
-      padding: 0.55rem 1rem;
-      background: white;
-      color: black;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 8px;
+      padding: 0.875rem;
+      background: linear-gradient(90deg, var(--blue-accent), var(--purple-accent));
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
       font-weight: 600;
       cursor: pointer;
-      margin-top: 1rem;
-      transition: all 0.2s ease;
+      margin-top: 1.5rem;
+      transition: var(--transition-fast);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      box-shadow: none;
+      gap: 0.75rem;
+      font-size: 1rem;
+      box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
     }
-
+    
     .submit-btn:hover {
-      transform: translateY(-1px);
-      background: white;
-      color: #1a1a1a;
-      box-shadow: none;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
     }
-
+    
     .submit-btn:active {
       transform: translateY(0);
     }
-
+    
     .history-list {
-      flex: 1;
+      max-height: 600px;
       overflow-y: auto;
       padding-right: 0.5rem;
-      max-height: none;
     }
-
-
-
+    
+    .history-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .history-list::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+      border-radius: 3px;
+    }
+    
+    .history-list::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 3px;
+    }
+    
+    .history-list::-webkit-scrollbar-thumb:hover {
+      background: var(--border-hover);
+    }
+    
     .history-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.75rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-      transition: background 0.18s;
-      border-radius: 4px;
-      margin-bottom: 0;
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition-fast);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.25rem;
     }
-
+    
     .history-item:last-child {
       border-bottom: none;
       margin-bottom: 0;
     }
-
+    
     .history-item:hover {
       background: rgba(255, 255, 255, 0.03);
       transform: translateX(2px);
     }
-
+    
     .history-date {
       font-weight: 500;
       color: var(--text-primary);
       font-size: 1rem;
     }
-
+    
     .history-actions {
       display: flex;
       gap: 0.5rem;
     }
-
+    
     .btn-view {
-      padding: 0.35rem 0.65rem;
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--text-secondary);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 6px;
+      padding: 0.5rem 0.875rem;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      font-size: 0.8rem;
-      transition: all 0.2s ease;
+      font-size: 0.85rem;
+      transition: var(--transition-fast);
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
       font-weight: 500;
     }
-
+    
     .btn-view:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.08);
-      color: var(--text-primary);
+      background: var(--blue-accent);
+      border-color: var(--blue-accent);
       transform: translateY(-1px);
     }
-
+    
     /* Modal Styles */
     .modal {
       display: none;
@@ -470,7 +592,7 @@
       align-items: center;
       backdrop-filter: blur(6px);
     }
-
+    
     .modal-content {
       background: var(--card-bg);
       border-radius: var(--radius-xl);
@@ -482,19 +604,18 @@
       overflow: hidden;
       animation: modalSlideIn 0.3s ease-out;
     }
-
+    
     @keyframes modalSlideIn {
       from {
         opacity: 0;
         transform: translateY(20px) scale(0.95);
       }
-
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
     }
-
+    
     .modal-header {
       padding: 1.5rem;
       border-bottom: 1px solid var(--border-color);
@@ -503,7 +624,7 @@
       justify-content: space-between;
       align-items: center;
     }
-
+    
     .modal-title {
       font-size: 1.25rem;
       font-weight: 600;
@@ -512,7 +633,7 @@
       align-items: center;
       gap: 0.75rem;
     }
-
+    
     .close-modal {
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
@@ -527,44 +648,44 @@
       border-radius: var(--radius-sm);
       transition: var(--transition-fast);
     }
-
+    
     .close-modal:hover {
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-primary);
       transform: rotate(90deg);
     }
-
+    
     .modal-body {
       padding: 1.5rem;
       max-height: 400px;
       overflow-y: auto;
     }
-
+    
     .modal-body::-webkit-scrollbar {
       width: 6px;
     }
-
+    
     .modal-body::-webkit-scrollbar-track {
       background: var(--bg-secondary);
       border-radius: 3px;
     }
-
+    
     .modal-body::-webkit-scrollbar-thumb {
       background: var(--border-color);
       border-radius: 3px;
     }
-
+    
     .modal-body::-webkit-scrollbar-thumb:hover {
       background: var(--border-hover);
     }
-
+    
     .attendance-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
-
+    
     .stat-card {
       background: var(--bg-secondary);
       padding: 1.25rem;
@@ -573,34 +694,34 @@
       border: 1px solid var(--border-color);
       transition: var(--transition-fast);
     }
-
+    
     .stat-card:hover {
       transform: translateY(-3px);
       border-color: var(--border-hover);
     }
-
+    
     .stat-value {
       font-size: 1.75rem;
       font-weight: 700;
       margin-bottom: 0.25rem;
       line-height: 1;
     }
-
+    
     .stat-value.present {
       color: var(--green-accent);
       text-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
     }
-
+    
     .stat-value.absent {
       color: var(--red-accent);
       text-shadow: 0 0 8px rgba(239, 68, 68, 0.3);
     }
-
+    
     .stat-value.no-session {
       color: var(--orange-accent);
       text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
     }
-
+    
     .stat-label {
       font-size: 0.8rem;
       color: var(--text-secondary);
@@ -608,13 +729,13 @@
       letter-spacing: 0.05em;
       font-weight: 600;
     }
-
+    
     .detail-list {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
     }
-
+    
     .detail-item {
       display: flex;
       justify-content: space-between;
@@ -625,16 +746,16 @@
       border: 1px solid var(--border-color);
       transition: var(--transition-fast);
     }
-
+    
     .detail-item:hover {
       border-color: var(--border-hover);
       transform: translateX(3px);
     }
-
+    
     .detail-student {
       flex: 1;
     }
-
+    
     .status-badge {
       padding: 0.375rem 0.875rem;
       border-radius: 20px;
@@ -643,25 +764,25 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-
+    
     .status-present {
       background: rgba(16, 185, 129, 0.15);
       color: var(--green-accent);
       border: 1px solid rgba(16, 185, 129, 0.3);
     }
-
+    
     .status-absent {
       background: rgba(239, 68, 68, 0.15);
       color: var(--red-accent);
       border: 1px solid rgba(239, 68, 68, 0.3);
     }
-
+    
     .status-no-session {
       background: rgba(245, 158, 11, 0.15);
       color: var(--orange-accent);
       border: 1px solid rgba(245, 158, 11, 0.3);
     }
-
+    
     .toast {
       position: fixed;
       top: 20px;
@@ -679,58 +800,44 @@
       align-items: center;
       gap: 0.75rem;
     }
-
+    
     .toast.success {
       background: rgba(16, 185, 129, 0.95);
       border: 1px solid rgba(16, 185, 129, 0.4);
     }
-
+    
     .toast.error {
       background: rgba(239, 68, 68, 0.95);
       border: 1px solid rgba(239, 68, 68, 0.4);
     }
-
+    
     @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
-
+    
     @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-
-      to {
-        transform: translateX(100%);
-        opacity: 0;
-      }
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
     }
-
+    
     .no-data {
       text-align: center;
       padding: 3rem 1rem;
       color: var(--text-secondary);
     }
-
+    
     .no-data i {
       font-size: 2.5rem;
       margin-bottom: 1rem;
       opacity: 0.5;
     }
-
+    
     .no-data p {
       font-size: 1rem;
       margin-top: 0.5rem;
     }
-
+    
     /* Loading spinner */
     .spinner {
       width: 20px;
@@ -740,36 +847,24 @@
       border-top-color: white;
       animation: spin 1s ease-in-out infinite;
     }
-
+    
     @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+      to { transform: rotate(360deg); }
     }
-
+    
     .loading .submit-btn-text {
       display: none;
     }
-
+    
     .loading .spinner {
       display: block;
     }
-
+    
     .spinner {
       display: none;
     }
-
-    #attendanceForm {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      overflow: hidden;
-      min-height: 0;
-      /* meaningful for flex children */
-    }
   </style>
 </head>
-
 <body>
   <div class="dashboard-container">
     <div class="dashboard-header">
@@ -778,14 +873,11 @@
 
     <div class="attendance-layout">
       <!-- Left Container - Mark Attendance -->
-      <div class="attendance-card">
-        <div class="card-header">
-          <h2 class="card-title"><i class="fas fa-calendar-check"></i> Mark Attendance [ {{ today|date:"F d, Y" }} ]</h2>
-        </div>
-        <div class="card-body">
-          
-
-          <!-- Quick Actions -->
+      <div class="attendance-card mark-card">
+        <div class="mark-top">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-calendar-check"></i> Mark Attendance - <i class="fas fa-calendar-day"></i>{{ today|date:"F d, Y" }}</h2>
+          </div>
           <div class="quick-actions">
             <button class="btn-quick present" onclick="quickMarkAll('PRESENT')">
               <i class="fas fa-check-circle"></i> Mark All Present
@@ -797,12 +889,14 @@
               <i class="fas fa-ban"></i> No Session All
             </button>
           </div>
+        </div>
 
+        <div class="card-body">
           <!-- Attendance Form -->
           <form id="attendanceForm" method="POST">
             {% csrf_token %}
             <input type="hidden" name="attendance_date" value="{{ today|date:'Y-m-d' }}">
-
+            
             <div class="attendance-list">
               {% for student in students %}
               <div class="attendance-item">
@@ -811,25 +905,25 @@
                   <div class="student-batch">{{ student.get_batch_display }}</div>
                 </div>
                 <div class="attendance-options">
-                 <div class="radio-group">
-    {% with field=student_fields.student.id %}
-    <label class="radio-label present {% if field.initial == 'PRESENT' %}checked{% endif %}">
-        <input type="radio" name="student_{{ student.id }}" value="PRESENT" 
-               {% if field.initial == 'PRESENT' %}checked{% endif %} class="radio-input">
-        <i class="fas fa-check"></i> Present
-    </label>
-    <label class="radio-label absent {% if field.initial == 'ABSENT' %}checked{% endif %}">
-        <input type="radio" name="student_{{ student.id }}" value="ABSENT" 
-               {% if field.initial == 'ABSENT' %}checked{% endif %} class="radio-input">
-        <i class="fas fa-times"></i> Absent
-    </label>
-    <label class="radio-label no-session {% if field.initial == 'NO_SESSION' %}checked{% endif %}">
-        <input type="radio" name="student_{{ student.id }}" value="NO_SESSION" 
-               {% if field.initial == 'NO_SESSION' %}checked{% endif %} class="radio-input">
-        <i class="fas fa-ban"></i> No Session
-    </label>
-    {% endwith %}
-</div>
+                  <div class="radio-group">
+                    {% with field=student_fields.student.id %}
+                    <label class="radio-label present {% if field.initial == 'PRESENT' %}checked{% endif %}">
+                      <input type="radio" name="student_{{ student.id }}" value="PRESENT" 
+                             {% if field.initial == 'PRESENT' %}checked{% endif %} class="radio-input">
+                      <i class="fas fa-check"></i> Present
+                    </label>
+                    <label class="radio-label absent {% if field.initial == 'ABSENT' %}checked{% endif %}">
+                      <input type="radio" name="student_{{ student.id }}" value="ABSENT" 
+                             {% if field.initial == 'ABSENT' %}checked{% endif %} class="radio-input">
+                      <i class="fas fa-times"></i> Absent
+                    </label>
+                    <label class="radio-label no-session {% if field.initial == 'NO_SESSION' %}checked{% endif %}">
+                      <input type="radio" name="student_{{ student.id }}" value="NO_SESSION" 
+                             {% if field.initial == 'NO_SESSION' %}checked{% endif %} class="radio-input">
+                      <i class="fas fa-ban"></i> No Session
+                    </label>
+                    {% endwith %}
+                  </div>
                 </div>
               </div>
               {% empty %}
@@ -841,14 +935,17 @@
               {% endfor %}
             </div>
 
-            {% if students %}
-            <button type="submit" class="submit-btn" id="submitBtn">
-              <span class="submit-btn-text"><i class="fas fa-save"></i> Save Attendance</span>
-              <span class="spinner"></span>
-            </button>
-            {% endif %}
           </form>
         </div>
+
+        {% if students %}
+        <div class="card-footer">
+          <button type="button" class="submit-btn" id="submitBtn" onclick="(function(f){ if(f && f.requestSubmit) f.requestSubmit(); else if(f) f.submit(); })(document.getElementById('attendanceForm'))">
+            <span class="submit-btn-text"><i class="fas fa-save"></i> Save Attendance</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+        {% endif %}
       </div>
 
       <!-- Right Container - Attendance History -->
@@ -863,8 +960,7 @@
               <div class="history-date">{{ date.date|date:"F d, Y" }}</div>
               <div class="history-actions">
                 <!-- Fixed the quote issue by using a data attribute -->
-                <button class="btn-view" data-date="{{ date.date|date:'Y-m-d' }}"
-                  onclick="viewAttendanceDetail(this.getAttribute('data-date'))">
+                <button class="btn-view" data-date="{{ date.date|date:'Y-m-d' }}" onclick="viewAttendanceDetail(this.getAttribute('data-date'))">
                   <i class="fas fa-eye"></i> View Details
                 </button>
               </div>
@@ -903,19 +999,19 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script>
     // Radio button functionality
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
       const radioLabels = document.querySelectorAll('.radio-label');
-
+      
       radioLabels.forEach(label => {
         const radio = label.querySelector('.radio-input');
-
-        label.addEventListener('click', function () {
+        
+        label.addEventListener('click', function() {
           // Remove checked class from all labels in the same group
           const groupName = radio.name;
           document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => {
             input.parentElement.classList.remove('checked');
           });
-
+          
           // Add checked class to clicked label
           label.classList.add('checked');
         });
@@ -925,11 +1021,11 @@
     // Quick mark all functionality
     function quickMarkAll(status) {
       const today = new Date().toISOString().split('T')[0];
-
+      
       // Show loading state
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.classList.add('loading');
-
+      
       axios.post('{% url "trainers:quick_mark_attendance" %}', {
         status: status,
         date: today
@@ -939,28 +1035,28 @@
           'X-CSRFToken': '{{ csrf_token }}'
         }
       })
-        .then(response => {
-          showToast(response.data.message, 'success');
-
-          // Update UI to reflect changes
-          document.querySelectorAll('.radio-input').forEach(radio => {
-            if (radio.value === status) {
-              radio.checked = true;
-              radio.parentElement.classList.add('checked');
-            } else {
-              radio.checked = false;
-              radio.parentElement.classList.remove('checked');
-            }
-          });
-        })
-        .catch(error => {
-          showToast('Error marking attendance', 'error');
-          console.error('Error:', error);
-        })
-        .finally(() => {
-          // Reset loading state
-          submitBtn.classList.remove('loading');
+      .then(response => {
+        showToast(response.data.message, 'success');
+        
+        // Update UI to reflect changes
+        document.querySelectorAll('.radio-input').forEach(radio => {
+          if (radio.value === status) {
+            radio.checked = true;
+            radio.parentElement.classList.add('checked');
+          } else {
+            radio.checked = false;
+            radio.parentElement.classList.remove('checked');
+          }
         });
+      })
+      .catch(error => {
+        showToast('Error marking attendance', 'error');
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        // Reset loading state
+        submitBtn.classList.remove('loading');
+      });
     }
 
     // View attendance detail in modal
@@ -969,14 +1065,14 @@
       document.getElementById('attendanceStats').innerHTML = '<div class="no-data"><div class="spinner" style="display: block; margin: 0 auto;"></div></div>';
       document.getElementById('attendanceDetailList').innerHTML = '';
       document.getElementById('attendanceDetailModal').style.display = 'flex';
-
+      
       axios.get('{% url "trainers:attendance_detail" %}?date=' + date)
         .then(response => {
           const data = response.data;
-
+          
           // Update modal title
           document.getElementById('modalTitle').innerHTML = `<i class="fas fa-info-circle"></i> Attendance - ${data.date}`;
-
+          
           // Update stats
           const statsHtml = `
             <div class="stat-card">
@@ -993,7 +1089,7 @@
             </div>
           `;
           document.getElementById('attendanceStats').innerHTML = statsHtml;
-
+          
           // Update detail list
           if (data.attendance_data.length > 0) {
             let detailHtml = '';
@@ -1045,18 +1141,18 @@
       if (existingToast) {
         existingToast.remove();
       }
-
+      
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
-
+      
       if (type === 'success') {
         toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
       } else {
         toast.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
       }
-
+      
       document.body.appendChild(toast);
-
+      
       setTimeout(() => {
         toast.style.animation = 'slideOut 0.3s ease forwards';
         setTimeout(() => {
@@ -1068,36 +1164,36 @@
     }
 
     // Handle form submission with AJAX
-    document.getElementById('attendanceForm').addEventListener('submit', function (e) {
+    document.getElementById('attendanceForm').addEventListener('submit', function(e) {
       e.preventDefault();
-
+      
       // Show loading state
       const submitBtn = document.getElementById('submitBtn');
       const originalText = submitBtn.innerHTML;
       submitBtn.classList.add('loading');
-
+      
       const formData = new FormData(this);
-
+      
       axios.post('{% url "trainers:attendance" %}', formData, {
         headers: {
           'X-Requested-With': 'XMLHttpRequest'
         }
       })
-        .then(response => {
-          showToast(response.data.message, 'success');
-        })
-        .catch(error => {
-          showToast('Error saving attendance', 'error');
-          console.error('Error:', error);
-        })
-        .finally(() => {
-          // Reset loading state
-          submitBtn.classList.remove('loading');
-        });
+      .then(response => {
+        showToast(response.data.message, 'success');
+      })
+      .catch(error => {
+        showToast('Error saving attendance', 'error');
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        // Reset loading state
+        submitBtn.classList.remove('loading');
+      });
     });
 
     // Close modal when clicking outside
-    window.addEventListener('click', function (event) {
+    window.addEventListener('click', function(event) {
       const modal = document.getElementById('attendanceDetailModal');
       if (event.target === modal) {
         closeModal();
@@ -1105,5 +1201,4 @@
     });
   </script>
 </body>
-
 </html>
