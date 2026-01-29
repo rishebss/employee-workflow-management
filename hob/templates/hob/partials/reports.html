@@ -4,13 +4,13 @@
             <h3 style="margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.2px;">Daily Reports</h3>
             <span style="color: var(--text-secondary); font-size: 0.9rem;">Team daily updates</span>
         </div>
-        <button class="btn btn-primary" id="createReportBtn" style="background: var(--accent); color: var(--bg-primary); border: none; border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;">
+        <button class="btn btn-primary" id="createReportBtn" onclick="openCreateReportModal()" style="background: var(--accent); color: var(--bg-primary); border: none; border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 0.5rem;">
             <i class="fas fa-plus"></i>
             Add Report
         </button>
     </div>
 
-    <div style="padding: 1.5rem;">
+    <div class="report-list-container" style="padding: 1.5rem;">
         {% regroup recent_reports by report_date as reports_by_date %}
         
         {% for report_date in reports_by_date %}
@@ -108,6 +108,14 @@
 </div>
 
 <style>
+.report-list-container {
+    max-height: calc(100vh - 250px); /* Same height as tasks and staff */
+    overflow-x: hidden;
+    overflow-y: auto; /* Make it scrollable */
+    padding: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
 /* Report Cards Layout */
 .report-cards {
     display: flex;
@@ -127,6 +135,26 @@
     border-color: var(--border-hover);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Scrollbar for report-list-container */
+.report-list-container::-webkit-scrollbar {
+    width: 8px; /* width of the scrollbar */
+}
+
+.report-list-container::-webkit-scrollbar-thumb {
+    background-color: #888; /* color of the scrollbar thumb */
+    border-radius: 10px; /* roundness of the scrollbar thumb */
+    border: 2px solid var(--card-bg); /* creates a padding around thumb */
+}
+
+.report-list-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* color of the scrollbar thumb on hover */
+}
+
+.report-list-container::-webkit-scrollbar-track {
+    background: var(--card-bg); /* color of the scrollbar track */
+    border-radius: 10px;
 }
 
 .report-header {
@@ -392,11 +420,16 @@
         word-break: break-word;
     }
 }
+
+/* Hide scrollbar for modal content while maintaining scroll functionality */
+.modal-content::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
 </style>
 
 <!-- Create Report Modal -->
 <div id="createReportModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-    <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+    <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
         <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
             <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 600; margin: 0;">Create Daily Report</h2>
             <button class="modal-close" id="closeReportModalBtn" style="background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px;">
@@ -451,21 +484,109 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-// Open create report modal
-const createReportBtn = document.getElementById('createReportBtn');
-const createReportModal = document.getElementById('createReportModal');
-const closeReportModalBtn = document.getElementById('closeReportModalBtn');
-const cancelReportBtn = document.getElementById('cancelReportBtn');
-const createReportForm = document.getElementById('createReportForm');
-
-if (createReportBtn) {
-    createReportBtn.addEventListener('click', function() {
-        createReportModal.style.display = 'flex';
-        // Set today's date as default
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('reportDate').value = today;
+// Initialize modal functionality when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Loaded - Initializing report modal functionality');
+    
+    // Open create report modal
+    const createReportBtn = document.getElementById('createReportBtn');
+    const createReportModal = document.getElementById('createReportModal');
+    const closeReportModalBtn = document.getElementById('closeReportModalBtn');
+    const cancelReportBtn = document.getElementById('cancelReportBtn');
+    const createReportForm = document.getElementById('createReportForm');
+    
+    console.log('createReportBtn:', createReportBtn);
+    console.log('createReportModal:', createReportModal);
+    
+    if (createReportBtn) {
+        console.log('Adding click event listener to createReportBtn');
+        createReportBtn.addEventListener('click', function() {
+            console.log('Create report button clicked!');
+            createReportModal.style.display = 'flex';
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reportDate').value = today;
+        });
+    } else {
+        console.error('createReportBtn not found!');
+    }
+    
+    function closeReportModal() {
+        createReportModal.style.display = 'none';
+        createReportForm.reset();
+    }
+    
+    if (closeReportModalBtn) {
+        closeReportModalBtn.addEventListener('click', closeReportModal);
+    }
+    
+    if (cancelReportBtn) {
+        cancelReportBtn.addEventListener('click', closeReportModal);
+    }
+    
+    // Close modal when clicking outside
+    if (createReportModal) {
+        createReportModal.addEventListener('click', function(e) {
+            if (e.target === createReportModal) {
+                closeReportModal();
+            }
+        });
+    }
+    
+    // Close modal with escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && createReportModal && createReportModal.style.display === 'flex') {
+            closeReportModal();
+        }
     });
-}
+    
+    // Handle form submission
+    if (createReportForm) {
+        createReportForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            submitBtn.disabled = true;
+            
+            const formData = new FormData(this);
+            
+            fetch('{% url "hob:create_report" %}', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast('Report created successfully!', 'success');
+                    closeReportModal();
+                    // Reload the reports tab
+                    if (typeof loadTabContent === 'function') {
+                        loadTabContent('reports');
+                    } else {
+                        // Fallback: reload the page
+                        window.location.reload();
+                    }
+                } else {
+                    showToast(data.message || 'Error creating report', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error creating report:', error);
+                showToast('Error creating report. Please try again.', 'error');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+});
 
 function closeReportModal() {
     createReportModal.style.display = 'none';
@@ -508,7 +629,7 @@ if (createReportForm) {
         
         const formData = new FormData(this);
         
-        fetch('/staff-reports/', {
+        fetch('{% url "hob:create_report" %}', {
             method: 'POST',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
@@ -659,5 +780,23 @@ function showToast(message, type) {
     setTimeout(() => {
         toast.style.display = 'none';
     }, 3000);
+}
+
+// Fallback function for onclick attribute
+function openCreateReportModal() {
+    console.log('openCreateReportModal called via onclick');
+    const modal = document.getElementById('createReportModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        // Set today's date as default
+        const today = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('reportDate');
+        if (dateInput) {
+            dateInput.value = today;
+        }
+        console.log('Modal opened successfully');
+    } else {
+        console.error('Modal element not found!');
+    }
 }
 </script>

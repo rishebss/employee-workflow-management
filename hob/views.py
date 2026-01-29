@@ -219,6 +219,57 @@ def reports_tab(request):
         'today': today,
     }
     return render(request, 'hob/partials/reports.html', context)
+
+@login_required
+@user_passes_test(is_business_head)
+@require_http_methods(["POST"])
+def create_report(request):
+    """Create a new daily report from HOB dashboard"""
+    print("=== CREATE REPORT VIEW CALLED ===")
+    print("Request method:", request.method)
+    print("Request user:", request.user)
+    print("Request POST data:", request.POST)
+    try:
+        # Get form data
+        name = request.POST.get('name')
+        heading = request.POST.get('heading')
+        report_text = request.POST.get('report_text')
+        report_date = request.POST.get('report_date')
+        attached_file = request.FILES.get('attached_file')
+        
+        # Validate required fields
+        if not all([name, heading, report_text, report_date]):
+            return JsonResponse({
+                'status': 'error', 
+                'message': 'All fields are required'
+            }, status=400)
+        
+        # Create the report
+        report = DailyReport.objects.create(
+            user=request.user,
+            name=name,
+            heading=heading,
+            report_text=report_text,
+            report_date=report_date
+        )
+        
+        # Handle file upload
+        if attached_file:
+            report.attached_file = attached_file
+            report.save()
+        
+        return JsonResponse({
+            'status': 'success', 
+            'message': 'Report created successfully',
+            'report_id': report.id
+        })
+        
+    except Exception as e:
+        logger.exception('Error creating report')
+        return JsonResponse({
+            'status': 'error', 
+            'message': f'Failed to create report: {str(e)}'
+        }, status=500)
     
 @login_required
 @user_passes_test(is_business_head)

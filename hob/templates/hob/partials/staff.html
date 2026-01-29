@@ -49,6 +49,11 @@
   gap: 1rem;
   padding: 1rem 1.25rem 0 1.25rem;
   margin-bottom: 1rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Make it scrollable */
+  max-height: calc(100vh - 250px); /* Same height as tasks */
+  width: 100%;
+  box-sizing: border-box;
 }
 .staff-card {
   background: var(--card-bg);
@@ -76,6 +81,10 @@
 .badge { display:inline-block; min-width: 36px; text-align:center; padding: 0.15rem 0.5rem; border-radius: 6px; background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); }
 
 @media (max-width: 768px) {
-  .staff-cards { grid-template-columns: 1fr; }
+  .staff-cards { 
+    grid-template-columns: 1fr; 
+    padding: 1rem;
+    overflow-x: hidden;
+  }
 }
 </style>
