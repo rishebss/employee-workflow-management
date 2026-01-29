@@ -193,10 +193,12 @@
                     </div>
                 </div>
                 
-                <div class="form-field">
-                    <label for="leadStatus">Status</label>
-                    <input type="text" id="leadStatus" name="status" class="form-input" placeholder="Enter status" list="status-suggestions" value="ENQUIRY">
-                </div>
+                <!-- Row 4: Status and Source -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="form-field">
+                        <label for="leadStatus" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Status</label>
+                        <input type="text" id="leadStatus" name="status" class="form-input" placeholder="Enter status" list="status-suggestions" value="ENQUIRY" style="padding: 0.85rem; font-size: 1rem;">
+                    </div>
                 
                 <div class="form-field">
                     <label for="leadSource">Source</label>

@@ -157,39 +157,45 @@
         <form id="addLeadForm" style="display: flex; flex-direction: column; flex: 1;">
             {% csrf_token %}
             <div style="padding: 1.75rem; flex: 1;">
-                <div class="form-field">
-                    <label for="leadName">Name *</label>
-                    <input type="text" id="leadName" name="name" class="form-input" required placeholder="Enter lead name">
+                <!-- Row 1: Name and Phone -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="form-field">
+                        <label for="leadName" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Name *</label>
+                        <input type="text" id="leadName" name="name" class="form-input" required placeholder="Enter lead name" style="padding: 0.85rem; font-size: 1rem;">
                     </div>
-                
-                <div class="form-field">
-                    <label for="leadPhone">Phone *</label>
-                    <input type="tel" id="leadPhone" name="phone" class="form-input" required placeholder="Enter phone number">
+                    <div class="form-field">
+                        <label for="leadPhone" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Phone *</label>
+                        <input type="tel" id="leadPhone" name="phone" class="form-input" required placeholder="Enter phone number" style="padding: 0.85rem; font-size: 1rem;">
+                    </div>
                 </div>
                 
-                <div class="form-field">
-                    <label for="leadEmail">Email</label>
-                    <input type="email" id="leadEmail" name="email" class="form-input" placeholder="Enter email address">
+                <!-- Row 2: Email and Location -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="form-field">
+                        <label for="leadEmail" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Email</label>
+                        <input type="email" id="leadEmail" name="email" class="form-input" placeholder="Enter email address" style="padding: 0.85rem; font-size: 1rem;">
                     </div>
-                
-                <div class="form-field">
-                    <label for="leadLocation">Location</label>
-                    <input type="text" id="leadLocation" name="location" class="form-input" placeholder="Enter location">
+                    <div class="form-field">
+                        <label for="leadLocation" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Location</label>
+                        <input type="text" id="leadLocation" name="location" class="form-input" placeholder="Enter location" style="padding: 0.85rem; font-size: 1rem;">
+                    </div>
                 </div>
                 
-                <div class="form-field">
-                    <label for="leadProgram">Program</label>
-                    <input type="text" id="leadProgram" name="program" class="form-input" placeholder="Enter program/course">
-                        </div>
-                
-                <div class="form-field">
-                    <label for="leadPriority">Priority</label>
-                    <select id="leadPriority" name="priority" class="form-select">
-                        <option value="MEDIUM">Medium</option>
-                        <option value="HIGH">High</option>
-                        <option value="LOW">Low</option>
-                    </select>
+                <!-- Row 3: Program and Priority -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="form-field">
+                        <label for="leadProgram" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Program</label>
+                        <input type="text" id="leadProgram" name="program" class="form-input" placeholder="Enter program/course" style="padding: 0.85rem; font-size: 1rem;">
                     </div>
+                    <div class="form-field">
+                        <label for="leadPriority" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Priority</label>
+                        <select id="leadPriority" name="priority" class="form-select" style="padding: 0.85rem; font-size: 1rem;">
+                            <option value="MEDIUM">Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="LOW">Low</option>
+                        </select>
+                    </div>
+                </div>
                 
                 <div class="form-field">
                     <label for="leadStatus">Status</label>
@@ -205,9 +211,10 @@
                     </select>
                 </div>
                 
-                <div class="form-field">
-                    <label for="leadRemarks">Remarks</label>
-                    <textarea id="leadRemarks" name="remarks" class="form-textarea" placeholder="Enter any additional remarks"></textarea>
+                <!-- Row 5: Full-width Remarks -->
+                <div class="form-field" style="margin-bottom: 1.5rem;">
+                    <label for="leadRemarks" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Remarks</label>
+                    <textarea id="leadRemarks" name="remarks" class="form-textarea" placeholder="Enter any additional remarks" style="padding: 0.85rem; font-size: 1rem; resize: none; min-height: 120px; width: 100%;"></textarea>
                 </div>
             </div>
             <div class="modal-footer" style="padding: 1.5rem 1.75rem; border-top: 1px solid var(--border-color); flex-shrink: 0; background: var(--card-bg); border-radius: 0 0 16px 16px;">
