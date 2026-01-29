@@ -105,18 +105,44 @@ class DailyReport(models.Model):
     def get_file_name(self):
         """Returns the original file name"""
         if self.attached_file:
-            # Cloudinary stores original filename in metadata
-            return os.path.basename(self.attached_file.public_id)
+            # Try to get the original filename from Cloudinary metadata
+            try:
+                # Cloudinary stores original filename in the public_id
+                # The public_id is usually in the format: folder/filename_with_timestamp
+                public_id = str(self.attached_file.public_id)
+                # Extract filename part (after the last slash)
+                filename = os.path.basename(public_id)
+                # Remove any Cloudinary-generated suffixes (like timestamps)
+                if '_' in filename:
+                    # Try to get the part before the last underscore
+                    parts = filename.split('_')
+                    if len(parts) > 1:
+                        # Join all parts except the last one (timestamp)
+                        filename = '_'.join(parts[:-1])
+                return filename
+            except Exception:
+                # Fallback to a generic name
+                return "Attached File"
         return None
 
     def get_secure_file_url(self):
         """Returns HTTPS URL for Cloudinary files"""
         if self.attached_file:
-            # Force HTTPS by replacing http:// with https://
-            url = self.attached_file.url
-            if url.startswith('http://'):
-                url = url.replace('http://', 'https://')
-            return url
+            try:
+                # Get the Cloudinary URL
+                url = self.attached_file.url
+                # Force HTTPS by replacing http:// with https://
+                if url.startswith('http://'):
+                    url = url.replace('http://', 'https://')
+                # Ensure it's a valid URL
+                if url.startswith('https://'):
+                    return url
+                else:
+                    # If it's not a full URL, construct it
+                    return f'https://res.cloudinary.com/{url}'
+            except Exception:
+                # Return None if there's any error
+                return None
         return None    
 
 class MicroWork(models.Model):

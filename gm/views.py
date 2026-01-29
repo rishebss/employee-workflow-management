@@ -196,9 +196,8 @@ def reports_tab(request):
     """Reports tab data"""
     today = timezone.now().date()
     
-    recent_reports = DailyReport.objects.filter(
-        report_date__gte=today - timezone.timedelta(days=30)
-    ).select_related('user').order_by('-report_date', '-created_at')
+    # For debugging, show all reports first
+    recent_reports = DailyReport.objects.all().select_related('user').order_by('-report_date', '-created_at')
     
     context = {
         'recent_reports': recent_reports,
