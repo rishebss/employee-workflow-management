@@ -147,16 +147,16 @@
 
 <!-- Add Lead Modal -->
 <div id="addLeadModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title">Add New Lead</h2>
-            <button type="button" class="modal-close" aria-label="Close add lead dialog">
+    <div class="modal-content" style="width: 95%; max-width: 800px; max-height: 95vh; display: flex; flex-direction: column; box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);">
+        <div class="modal-header" style="padding: 1.75rem; border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
+            <h2 class="modal-title" style="font-size: 1.75rem;">Add New Lead</h2>
+            <button type="button" class="modal-close" aria-label="Close add lead dialog" style="transition: all 0.2s ease;">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <form id="addLeadForm" style="display: flex; flex-direction: column; flex: 1;">
             {% csrf_token %}
-            <div style="padding: 1.5rem; flex: 1; overflow-y: auto; min-height: 0;">
+            <div style="padding: 1.75rem; flex: 1;">
                 <div class="form-field">
                     <label for="leadName">Name *</label>
                     <input type="text" id="leadName" name="name" class="form-input" required placeholder="Enter lead name">
@@ -210,9 +210,9 @@
                     <textarea id="leadRemarks" name="remarks" class="form-textarea" placeholder="Enter any additional remarks"></textarea>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-notes" onclick="closeAddLeadModal()">Cancel</button>
-                <button type="submit" class="btn btn-contact" id="addLeadButton">
+            <div class="modal-footer" style="padding: 1.5rem 1.75rem; border-top: 1px solid var(--border-color); flex-shrink: 0; background: var(--card-bg); border-radius: 0 0 16px 16px;">
+                <button type="button" class="btn btn-notes" onclick="closeAddLeadModal()" style="padding: 0.85rem 1.75rem; font-size: 1rem;">Cancel</button>
+                <button type="submit" class="btn btn-contact" id="addLeadButton" style="padding: 0.85rem 1.75rem; font-size: 1rem;">
                     <i class="fas fa-plus mr-1"></i> Add Lead
                 </button>
             </div>
@@ -1611,6 +1611,11 @@ document.addEventListener('DOMContentLoaded', function() {
     .bc-table th:nth-child(3), .bc-table td:nth-child(3) { width: 24%; }
     .bc-table th:nth-child(5), .bc-table td:nth-child(5) { width: 25%; }
     .bc-table th:nth-child(7), .bc-table td:nth-child(7) { width: 21%; }
+}
+/* Modal column styling */
+.form-column {
+    display: flex;
+    flex-direction: column;
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

@@ -372,113 +372,70 @@
 
 
 <!-- Create Task Modal -->
-
 <div id="createTaskModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-
-    <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
-
-        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
-
-            <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 600; margin: 0;">Create New Task</h2>
-
-            <button class="modal-close" onclick="closeCreateTaskModal()" style="background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px;">
-
+    <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; width: 95%; max-width: 800px; max-height: 95vh; display: flex; flex-direction: column; box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);">
+        <!-- Modal Header -->
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.75rem; border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
+            <h2 class="modal-title" style="font-size: 1.75rem; font-weight: 600; margin: 0; color: var(--text-primary);">Create New Task</h2>
+            <button class="modal-close" onclick="closeCreateTaskModal()" style="background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.2s ease;">
                 <i class="fas fa-times"></i>
-
             </button>
-
         </div>
-
-        <form id="createTaskForm" onsubmit="createTask(event)">
-
-            <div class="modal-body" style="padding: 1.5rem;">
-
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-
-                    <label class="form-label" for="taskTitle" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Title *</label>
-
-                    <input type="text" id="taskTitle" class="form-control" required placeholder="Enter task title" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; transition: border 0.2s ease;">
-
+        
+        <!-- Modal Form (No Scroll) -->
+        <form id="createTaskForm" onsubmit="createTask(event)" style="display: flex; flex-direction: column; flex: 1;">
+            <div class="modal-body" style="padding: 1.75rem; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem;">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="taskTitle" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Title *</label>
+                        <input type="text" id="taskTitle" class="form-control" required placeholder="Enter task title" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem; transition: border 0.2s ease;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="taskAssignedTo" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Assign To *</label>
+                        <select id="taskAssignedTo" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem;">
+                            <option value="">Select team member</option>
+                            {% for member in staff_members %}
+                                <option value="{{ member.id }}">
+                                    {{ member.get_full_name }} - {{ member.get_role_display }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="taskPriority" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Priority</label>
+                        <select id="taskPriority" class="form-control" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem;">
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM" selected>Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="URGENT">Urgent</option>
+                        </select>
+                    </div>
                 </div>
-
                 
-
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-
-                    <label class="form-label" for="taskDescription" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Description *</label>
-
-                    <textarea id="taskDescription" class="form-control form-textarea" required placeholder="Enter task description" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; resize: vertical; min-height: 100px;"></textarea>
-
+                <!-- Right Column -->
+                <div class="form-column">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="taskDescription" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Description *</label>
+                        <textarea id="taskDescription" class="form-control form-textarea" required placeholder="Enter task description" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem; resize: none; min-height: 180px;"></textarea>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="taskDeadline" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Deadline *</label>
+                        <input type="datetime-local" id="taskDeadline" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem;">
+                    </div>
                 </div>
-
-                
-
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-
-                    <label class="form-label" for="taskAssignedTo" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Assign To *</label>
-
-                    <select id="taskAssignedTo" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem;">
-
-                        <option value="">Select team member</option>
-
-                        {% for member in staff_members %}
-
-                            <option value="{{ member.id }}">
-
-                                {{ member.get_full_name }} - {{ member.get_role_display }}
-
-                            </option>
-
-                        {% endfor %}
-
-                    </select>
-
-                </div>
-
-                
-
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-
-                    <label class="form-label" for="taskPriority" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Priority</label>
-
-                    <select id="taskPriority" class="form-control" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem;">
-
-                        <option value="LOW">Low</option>
-
-                        <option value="MEDIUM" selected>Medium</option>
-
-                        <option value="HIGH">High</option>
-
-                        <option value="URGENT">Urgent</option>
-
-                    </select>
-
-                </div>
-
-                
-
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-
-                    <label class="form-label" for="taskDeadline" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Deadline *</label>
-
-                    <input type="datetime-local" id="taskDeadline" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem;">
-
-                </div>
-
             </div>
-
-            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid var(--border-color);">
-
-                <button type="button" class="btn btn-secondary" onclick="closeCreateTaskModal()" style="padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color);">Cancel</button>
-
-                <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; background: var(--accent); color: var(--bg-primary);">Create Task</button>
-
+            
+            <!-- Modal Footer (Fixed) -->
+            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 1.25rem; padding: 1.5rem 1.75rem; border-top: 1px solid var(--border-color); background: var(--card-bg); border-radius: 0 0 16px 16px; flex-shrink: 0;">
+                <button type="button" class="btn btn-secondary" onclick="closeCreateTaskModal()" style="padding: 0.85rem 1.75rem; border-radius: 8px; font-size: 1rem; font-weight: 500; border: none; cursor: pointer; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); transition: all 0.2s ease;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="padding: 0.85rem 1.75rem; border-radius: 8px; font-size: 1rem; font-weight: 500; border: none; cursor: pointer; background: var(--accent); color: var(--bg-primary); transition: all 0.2s ease;">Create Task</button>
             </div>
-
         </form>
-
     </div>
-
 </div>
 
 
@@ -2579,6 +2536,12 @@ document.addEventListener('DOMContentLoaded', function() {
 /* Hide scrollbar for modal content while maintaining scroll functionality */
 .modal-content::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
+}
+
+/* Modal column styling */
+.form-column {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Prevent horizontal scroll on body */

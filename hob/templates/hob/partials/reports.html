@@ -421,55 +421,67 @@
     }
 }
 
-/* Hide scrollbar for modal content while maintaining scroll functionality */
-.modal-content::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
+/* Modal column styling */
+.form-column {
+    display: flex;
+    flex-direction: column;
 }
 </style>
 
 <!-- Create Report Modal -->
 <div id="createReportModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-    <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
-        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
-            <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 600; margin: 0;">Create Daily Report</h2>
-            <button class="modal-close" id="closeReportModalBtn" style="background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px;">
+    <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; width: 95%; max-width: 800px; max-height: 95vh; display: flex; flex-direction: column; box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);">
+        <!-- Modal Header -->
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.75rem; border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
+            <h2 class="modal-title" style="font-size: 1.75rem; font-weight: 600; margin: 0; color: var(--text-primary);">Create Daily Report</h2>
+            <button class="modal-close" id="closeReportModalBtn" style="background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.2s ease;">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <form id="createReportForm" enctype="multipart/form-data">
+        
+        <!-- Modal Form (No Scroll) -->
+        <form id="createReportForm" enctype="multipart/form-data" style="display: flex; flex-direction: column; flex: 1;">
             {% csrf_token %}
-            <div class="modal-body" style="padding: 1.5rem;">
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label class="form-label" for="reportName" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Report Name *</label>
-                    <input type="text" id="reportName" name="name" class="form-control" required placeholder="Enter report name" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; transition: border 0.2s ease;">
+            <div class="modal-body" style="padding: 1.75rem; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem;">
+                <!-- Left Column -->
+                <div class="form-column">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="reportName" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Report Name *</label>
+                        <input type="text" id="reportName" name="name" class="form-control" required placeholder="Enter report name" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem; transition: border 0.2s ease;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="reportHeading" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Heading *</label>
+                        <input type="text" id="reportHeading" name="heading" class="form-control" required placeholder="Brief summary" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem; transition: border 0.2s ease;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="reportDate" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Report Date *</label>
+                        <input type="date" id="reportDate" name="report_date" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem;">
+                    </div>
                 </div>
                 
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label class="form-label" for="reportHeading" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Heading *</label>
-                    <input type="text" id="reportHeading" name="heading" class="form-control" required placeholder="Brief summary" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; transition: border 0.2s ease;">
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label class="form-label" for="reportText" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Daily Update *</label>
-                    <textarea id="reportText" name="report_text" class="form-control form-textarea" required placeholder="Share your daily progress and updates" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; resize: vertical; min-height: 150px;"></textarea>
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label class="form-label" for="reportDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Report Date *</label>
-                    <input type="date" id="reportDate" name="report_date" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem;">
-                </div>
-                
-                <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label class="form-label" for="reportFile" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Attach File (Optional)</label>
-                    <input type="file" id="reportFile" name="attached_file" class="form-control" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.txt" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem;">
-                    <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem; display: block;">Supported: PDF, Word, Excel, Images, Text (Max 10MB)</small>
+                <!-- Right Column -->
+                <div class="form-column">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="reportText" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Daily Update *</label>
+                        <textarea id="reportText" name="report_text" class="form-control form-textarea" required placeholder="Share your daily progress and updates" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem; resize: none; min-height: 200px;"></textarea>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label" for="reportFile" style="display: block; margin-bottom: 0.6rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Attach File (Optional)</label>
+                        <input type="file" id="reportFile" name="attached_file" class="form-control" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.txt" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem; color: var(--text-primary); font-size: 1rem;">
+                        <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.3rem; display: block;">Supported: PDF, Word, Excel, Images, Text (Max 10MB)</small>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid var(--border-color);">
-                <button type="button" class="btn btn-secondary" id="cancelReportBtn" style="padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color);">Cancel</button>
-                <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; background: var(--accent); color: var(--bg-primary);">
+            
+            <!-- Modal Footer (Fixed) -->
+            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 1.25rem; padding: 1.5rem 1.75rem; border-top: 1px solid var(--border-color); background: var(--card-bg); border-radius: 0 0 16px 16px; flex-shrink: 0;">
+                <button type="button" class="btn btn-secondary" id="cancelReportBtn" style="padding: 0.85rem 1.75rem; border-radius: 8px; font-size: 1rem; font-weight: 500; border: none; cursor: pointer; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); transition: all 0.2s ease;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="padding: 0.85rem 1.75rem; border-radius: 8px; font-size: 1rem; font-weight: 500; border: none; cursor: pointer; background: var(--accent); color: var(--bg-primary); transition: all 0.2s ease;">
                     <i class="fas fa-save"></i>
-                    Submit
+                    Submit Report
                 </button>
             </div>
         </form>
