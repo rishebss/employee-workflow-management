@@ -199,14 +199,14 @@
                         <label for="leadStatus" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Status</label>
                         <input type="text" id="leadStatus" name="status" class="form-input" placeholder="Enter status" list="status-suggestions" value="ENQUIRY" style="padding: 0.85rem; font-size: 1rem;">
                     </div>
-                
-                <div class="form-field">
-                    <label for="leadSource">Source</label>
-                    <select id="leadSource" name="source" class="form-select">
-                        {% for value, label in source_choices %}
-                            <option value="{{ value }}" {% if value == 'WHATSAPP' %}selected{% endif %}>{{ label }}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="form-field">
+                        <label for="leadSource" style="font-size: 0.95rem; margin-bottom: 0.6rem;">Source</label>
+                        <select id="leadSource" name="source" class="form-select" style="padding: 0.85rem; font-size: 1rem;">
+                            {% for value, label in source_choices %}
+                                <option value="{{ value }}" {% if value == 'WHATSAPP' %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
                 
                 <!-- Row 5: Full-width Remarks -->
