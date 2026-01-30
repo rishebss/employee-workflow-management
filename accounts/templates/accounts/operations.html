@@ -45,37 +45,38 @@
       margin: 0 auto;
       padding: 2rem;
     }
-    .dashboard-header {
-      margin-bottom: 3rem;
+    /* Floating Navigation */
+    .floating-nav {
+      position: sticky;
+      top: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.75rem;
+      margin-bottom: 2rem;
+      z-index: 100;
+      box-shadow: var(--shadow-large);
+      backdrop-filter: blur(10px);
+    }
+    
+    .nav-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
       flex-wrap: wrap;
-      gap: 1rem;
     }
-    .dashboard-title {
-      font-size: clamp(2rem, 4vw, 2.5rem);
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      background: linear-gradient(135deg, #989595 0%, #45454a 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .header-controls {
+    
+    .nav-section {
       display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .files-btn-container {
-      position: relative;
-      display: flex;
-      align-items: center;
       gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
     }
-    .files-btn {
-      background: var(--bg-secondary);
-      color: var(--text-primary);
+    
+    .nav-btn {
+      background: transparent;
+      color: var(--text-secondary);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 0.5rem 1rem;
@@ -86,72 +87,64 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      border-color: var(--border-color);
+      text-decoration: none;
     }
-    .files-btn:hover {
+    
+    .nav-btn:hover {
       background: var(--border-hover);
+      color: var(--text-primary);
       border-color: var(--border-hover);
       transform: translateY(-1px);
     }
-    .files-btn:active {
-      transform: translateY(0);
+    
+    .nav-btn.active {
+      background: var(--accent);
+      color: var(--bg-primary);
+      border-color: var(--accent);
+    }
+    .dashboard-stats {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
     }
     .stats-dropdown {
       position: relative;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
     }
-    .add-leads-btn{
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-color: var(--border-color);
-    }
-    .stats-btn {
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-color: var(--border-color);
-    }
-    .stats-btn:hover {
-      background: var(--border-hover);
-      border-color: var(--border-hover);
+    
+    .search-section {
+      position: relative;
+      flex-shrink: 0;
+      min-width: 250px;
     }
     .stats-dropdown-content {
       position: absolute;
       top: 100%;
-      left: 0;
-      margin-top: 1rem;
-      background: var(--bg-secondary);
+      right: 0;
+      margin-top: 0.5rem;
+      background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 8px;
+      border-radius: 12px;
       box-shadow: var(--shadow-large);
       z-index: 1000;
-      width: 350px;
-      padding: 1rem;
+      width: 380px;
+      padding: 1.5rem;
       display: none;
-      backdrop-filter: blur(60px);
-      background: rgba(17, 17, 17, 0.95);
-      filter: none !important; /* Ensure dropdown is never blurred */
+      backdrop-filter: blur(20px);
     }
     .stats-dropdown-content.active {
       display: block;
@@ -201,13 +194,32 @@
     }
     .table-container {
       background: var(--card-bg);
+      border: 1px solid var(--border-color);
       border-radius: 16px;
       overflow: hidden;
-      border: 1px solid var(--border-color);
+      position: relative;
       box-shadow: var(--shadow-large);
     }
+    
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .table-stats .stat-item {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
     .table-scroll-vert {
-      max-height: 70vh;
+      max-height: calc(70vh - 24px);
       overflow-y: auto;
       overflow-x: hidden;
       position: relative;
@@ -216,7 +228,27 @@
       padding-right: 8px;
       /* Custom scrollbar styling for cleaner appearance */
       scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+      scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    }
+    
+    /* Webkit scrollbar styling for Chrome/Safari - Minimal design */
+    .table-scroll-vert::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    
+    .table-scroll-vert::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .table-scroll-vert::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      transition: background 0.2s ease;
+    }
+    
+    .table-scroll-vert::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
     }
 
     /* Webkit scrollbar styling for Chrome/Safari */
@@ -647,82 +679,100 @@
 
     @media (max-width: 768px) { .task-assignment-sidebar { width: 100%; left: -100%; } }
     
+    /* Minimal scrollbar styling for modal */
+    .modal-content::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .modal-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .modal-content::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      transition: background 0.2s ease;
+    }
+    
+    .modal-content::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    
+    .modal-body::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .modal-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .modal-body::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      transition: background 0.2s ease;
+    }
+    
+    .modal-body::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+    
   </style>
 </head>
 <body>
   <div class="dashboard-container">
-    <div class="dashboard-header">
-      <h1 class="dashboard-title">OPERATIONS DASHBOARD</h1>
-      <div class="header-controls">
-        <div class="stats-dropdown">
-          <button class="add-leads-btn" ><a href="{% url 'accounts:all_leads' %}"  style="margin-left: 0.5rem;">
-            <i class="fa-solid fa-eye"></i>
-            <span>View Leads</span>
-          </a></button>
-          <button class="add-leads-btn" id="tasksBtn" style="margin-left: 0.5rem;">
+    <!-- Floating Navigation -->
+    <div class="floating-nav">
+      <div class="nav-container">
+        <div class="nav-section">
+          <button class="nav-btn" id="filesBtn" onclick="openGoogleDrive()">
+            <i class="fas fa-folder-open"></i>
+            <span>Drive Folder</span>
+          </button>
+          <button class="nav-btn" id="reportsBtn">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Reports</span>
+          </button>
+          <button class="nav-btn" id="tasksBtn">
             <i class="fa-solid fa-circle-user"></i>
             <span>My Tasks</span>
-            
           </button>
-          <button class="add-leads-btn" id="assignTasksBtn" style="margin-left: 0.5rem;">
+          <button class="nav-btn" id="assignTasksBtn">
             <i class="fas fa-tasks"></i>
             <span>Assign Tasks</span>
           </button>
-          <button class="add-leads-btn" ><a href="{% url 'accounts:staff_reports' %}"  style="margin-left: 0.5rem;">
-            <i class="fa-solid fa-file-lines"></i>
-            <span>Reports</span>
-          </a></button>
-          <button class="stats-btn" id="statsBtn">
-            <i class="fas fa-chart-bar"></i>
-            <span>Stats</span>
-            <i class="fas fa-chevron-down"></i>
-          </button>
-          <div class="stats-dropdown-content" id="statsDropdown">
-            <div class="stats-section">
-              <h4>Lead Overview</h4>
-              <div class="stats-grid" id="overviewStats">
-                <!-- Will be populated by JavaScript -->
-  </div>
-  <!-- Shared status suggestions for datalist -->
-  <datalist id="status-suggestions-ops">
-    <option value="ENQUIRY"></option>
-    <option value="INTERESTED"></option>
-    <option value="NOT_INTERESTED"></option>
-    <option value="WALK_IN"></option>
-    <option value="ON_HOLD"></option>
-    <option value="REGISTERED"></option>
-    <option value="FOLLOW_UP"></option>
-    <option value="CONVERTED"></option>
-    <option value="LOST"></option>
-    <option value="COLD"></option>
-    <option value="WARM"></option>
-    <option value="HOT"></option>
-  </datalist>
-</div>
-            <div class="stats-section">
-              <h4>Assignment Status</h4>
-              <div class="stats-grid" id="assignmentStats">
-                <!-- Will be populated by JavaScript -->
+          <div class="stats-dropdown">
+            <button class="nav-btn" id="statsBtn">
+              <i class="fas fa-chart-bar"></i>
+              <span>Statistics</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="stats-dropdown-content" id="statsDropdown">
+              <div class="stats-section">
+                <h4>Lead Overview</h4>
+                <div class="stats-grid" id="overviewStats">
+                  <!-- Will be populated by JavaScript -->
+                </div>
               </div>
-            </div>
-            <div class="stats-section">
-              <h4>Processing Status</h4>
-              <div class="stats-grid" id="processingStats">
-                <!-- Will be populated by JavaScript -->
+              <div class="stats-section">
+                <h4>Assignment Status</h4>
+                <div class="stats-grid" id="assignmentStats">
+                  <!-- Will be populated by JavaScript -->
+                </div>
+              </div>
+              <div class="stats-section">
+                <h4>Processing Status</h4>
+                <div class="stats-grid" id="processingStats">
+                  <!-- Will be populated by JavaScript -->
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="files-btn-container">
-          <button class="files-btn" id="filesBtn" onclick="openGoogleDrive()">
-            <i class="fas fa-folder-open"></i>
-            <span>Drive Folder</span>
-          </button>
-        </div>
-        <div class="search-container">
+        
+        <div class="search-section">
           <div class="search-box">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" id="searchInput" placeholder=" Search..." class="search-input">
+            <input type="text" id="searchInput" placeholder="Search leads..." class="search-input">
             <button id="clearSearch" class="clear-search" style="display: none;">
               <i class="fas fa-times"></i>
             </button>
@@ -798,28 +848,28 @@
 
   <!-- Create/Edit Task Modal -->
   <div id="createTaskModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 10001; align-items: center; justify-content: center; backdrop-filter: blur(10px);">
-    <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
-      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color);">
-        <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 600; margin: 0;">Create New Task</h2>
-        <button class="modal-close" onclick="closeCreateTaskModal()" style="background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px;">
+    <div class="modal-content" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; width: 90%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.15) transparent;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--border-color); flex-shrink: 0;">
+        <h2 class="modal-title" style="font-size: 1.5rem; font-weight: 600; margin: 0; color: var(--text-primary);">Create New Task</h2>
+        <button class="modal-close" onclick="closeCreateTaskModal()" style="background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; padding: 0.5rem; border-radius: 8px; transition: all 0.2s ease;">
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <form id="createTaskForm" onsubmit="handleCreateTask(event)">
-        <div class="modal-body" style="padding: 1.5rem;">
+      <form id="createTaskForm" onsubmit="handleCreateTask(event)" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+        <div class="modal-body" style="padding: 1.5rem; flex: 1; overflow-y: auto; min-height: 0; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.15) transparent;">
           <div class="form-group" style="margin-bottom: 1.5rem;">
-            <label class="form-label" for="taskTitle" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Title *</label>
-            <input type="text" id="taskTitle" class="form-control" required placeholder="Enter task title" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; transition: border 0.2s ease;">
+            <label class="form-label" for="taskTitle" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Title *</label>
+            <input type="text" id="taskTitle" class="form-control" required placeholder="Enter task title" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; transition: all 0.2s ease;">
           </div>
           
           <div class="form-group" style="margin-bottom: 1.5rem;">
-            <label class="form-label" for="taskDescription" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Description *</label>
-            <textarea id="taskDescription" class="form-control form-textarea" required placeholder="Enter task description" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; resize: vertical; min-height: 100px;"></textarea>
+            <label class="form-label" for="taskDescription" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Description *</label>
+            <textarea id="taskDescription" class="form-control form-textarea" required placeholder="Enter task description" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; resize: vertical; min-height: 100px; transition: all 0.2s ease;"></textarea>
           </div>
           
           <div class="form-group" style="margin-bottom: 1.5rem;">
-            <label class="form-label" for="taskAssignedTo" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Assign To *</label>
-            <select id="taskAssignedTo" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem;">
+            <label class="form-label" for="taskAssignedTo" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Assign To *</label>
+            <select id="taskAssignedTo" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; appearance: none; cursor: pointer; transition: all 0.2s ease;">
               <option value="">Select team member</option>
               {% for exec in admission_executives %}
                 <option value="{{ exec.id }}">
@@ -835,8 +885,8 @@
           </div>
           
           <div class="form-group" style="margin-bottom: 1.5rem;">
-            <label class="form-label" for="taskPriority" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Priority</label>
-            <select id="taskPriority" class="form-control" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem;">
+            <label class="form-label" for="taskPriority" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Priority</label>
+            <select id="taskPriority" class="form-control" style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; appearance: none; cursor: pointer; transition: all 0.2s ease;">
               <option value="LOW">Low</option>
               <option value="MEDIUM" selected>Medium</option>
               <option value="HIGH">High</option>
@@ -845,19 +895,32 @@
           </div>
           
           <div class="form-group" style="margin-bottom: 1.5rem;">
-            <label class="form-label" for="taskDeadline" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary);">Deadline *</label>
-            <input type="datetime-local" id="taskDeadline" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem;">
+            <label class="form-label" for="taskDeadline" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-primary); font-size: 0.95rem;">Deadline *</label>
+            <input type="datetime-local" id="taskDeadline" class="form-control" required style="width: 100%; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 0.75rem; color: var(--text-primary); font-size: 1rem; transition: all 0.2s ease;">
           </div>
         </div>
-        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid var(--border-color);">
-          <button type="button" class="btn btn-secondary" onclick="closeCreateTaskModal()" style="padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color);">Cancel</button>
-          <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; background: var(--accent); color: var(--bg-primary);">Create Task</button>
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid var(--border-color); flex-shrink: 0;">
+          <button type="button" class="btn btn-secondary" onclick="closeCreateTaskModal()" style="padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; border: 1px solid var(--border-color); cursor: pointer; background: var(--bg-secondary); color: var(--text-primary); transition: all 0.2s ease;">Cancel</button>
+          <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 0.9rem; font-weight: 500; border: none; cursor: pointer; background: var(--accent); color: var(--bg-primary); transition: all 0.2s ease;">Create Task</button>
         </div>
       </form>
     </div>
   </div>
 
     <div class="table-container">
+      <div class="table-header">
+        <h2 style="color: var(--text-primary); font-size: 1.25rem; font-weight: 600; margin: 0;">Operations Dashboard</h2>
+        <div class="table-stats" id="tableStats" style="display: flex; gap: 1.5rem; align-items: center;">
+          <div class="stat-item">
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">Total Leads</span>
+            <span id="totalLeadsCount" style="color: var(--accent); font-size: 0.85rem; margin-left:4px;">0</span>
+          </div>
+          <button class="nav-btn" id="viewLeadsBtn">
+            <i class="fa-solid fa-eye"></i>
+            <span>All Leads</span>
+          </button>
+        </div>
+      </div>
       <div class="table-scroll-vert">
         <table class="bc-table bc-table-striped">
             <thead>
@@ -1140,6 +1203,9 @@
       if (statsDropdown.classList.contains('active')) {
         updateStats();
       }
+      
+      // Update total leads count
+      updateTotalLeadsCount();
     }
     
     // Function to update serial numbers for visible rows
@@ -1450,8 +1516,19 @@
       select.dataset.previousValue = select.value;
     });
     
-    // Initialize serial numbers
+    // Initialize total leads count and serial numbers
+    updateTotalLeadsCount();
     updateSerialNumbers();
+    
+    // Function to update total leads count
+    function updateTotalLeadsCount() {
+      const tbody = document.querySelector('tbody');
+      const totalRows = tbody ? tbody.querySelectorAll('tr').length : 0;
+      const countElement = document.getElementById('totalLeadsCount');
+      if (countElement) {
+        countElement.textContent = totalRows;
+      }
+    }
     
     // Toast notification function
     function showToast(message, type) {
@@ -1847,6 +1924,19 @@
           !assignTasksBtn.contains(e.target)) {
         closeTaskAssignmentSidebar();
       }
+    });
+    
+    // Navigation button event handlers
+    document.getElementById('viewLeadsBtn').addEventListener('click', function() {
+      window.location.href = '{% url "accounts:all_leads" %}';
+    });
+    
+    document.getElementById('reportsBtn').addEventListener('click', function() {
+      window.location.href = '{% url "accounts:staff_reports" %}';
+    });
+    
+    document.getElementById('filesBtn').addEventListener('click', function() {
+      openGoogleDrive();
     });
     
     document.addEventListener('DOMContentLoaded', function() { loadTasks(); });
