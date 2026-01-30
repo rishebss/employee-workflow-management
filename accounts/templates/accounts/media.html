@@ -316,7 +316,7 @@
     .form-footer {
       position: sticky;
       bottom: 0;
-      background: var(--bg-secondary);
+      background: transparent;
       border-top: 1px solid var(--border-color);
       padding: 1rem;
       display: flex;
@@ -739,6 +739,86 @@
       border-color: rgba(34, 197, 94, 0.3);
       color: #86efac;
     }
+    
+    /* Toast notification styles */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      width: 320px;
+    }
+    
+    .toast {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      box-shadow: var(--shadow-large);
+      backdrop-filter: blur(10px);
+      transform: translateX(120%);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    .toast.success {
+      border-color: rgba(34, 197, 94, 0.5);
+    }
+    
+    .toast.error {
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+    
+    .toast-icon {
+      font-size: 1.2rem;
+    }
+    
+    .toast.success .toast-icon {
+      color: #22c55e;
+    }
+    
+    .toast.error .toast-icon {
+      color: #ef4444;
+    }
+    
+    .toast-content {
+      flex: 1;
+    }
+    
+    .toast-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text-primary);
+    }
+    
+    .toast-message {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .toast-close:hover {
+      color: var(--text-primary);
+      background: var(--border-color);
+    }
     .alert-error {
       background: rgba(239, 68, 68, 0.1);
       border-color: rgba(239, 68, 68, 0.3);
@@ -810,7 +890,7 @@
         {% endfor %}
       {% endif %}
       
-      <form method="post">
+      <form method="post" action="{% url 'accounts:media_dashboard' %}" id="leadForm">
         {% csrf_token %}
         <div class="form-grid">
           <div class="form-group">
@@ -987,12 +1067,104 @@
         remarksField.setAttribute('placeholder', 'Enter any additional remarks or notes about this lead...');
       }
 
-      // Save button in sticky footer submits the form
+      // Handle form submission via AJAX to show toast on actual save
+      const leadForm = document.getElementById('leadForm');
       const saveBtn = document.getElementById('saveLeadBtn');
-      if (saveBtn) {
-        saveBtn.addEventListener('click', function () {
-          const leadForm = document.querySelector('.content-grid .form-container form');
-          if (leadForm) leadForm.submit();
+      
+      if (leadForm && saveBtn) {
+        // Handle save button click
+        saveBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          
+          // Validate required fields
+          const nameField = document.getElementById('id_name');
+          const phoneField = document.getElementById('id_phone');
+          
+          if (!nameField.value.trim()) {
+            showToast('Validation Error', 'Please enter a name', 'error', 4000);
+            nameField.focus();
+            return;
+          }
+          
+          if (!phoneField.value.trim()) {
+            showToast('Validation Error', 'Please enter a phone number', 'error', 4000);
+            phoneField.focus();
+            return;
+          }
+          
+          // Submit form via AJAX
+          submitFormViaAjax(leadForm);
+        });
+        
+        // Also handle form submit event (in case user presses Enter)
+        leadForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          submitFormViaAjax(leadForm);
+        });
+      }
+      
+      // Function to submit form via AJAX
+      function submitFormViaAjax(form) {
+        // Show loading state
+        if (saveBtn) {
+          saveBtn.textContent = 'Saving...';
+          saveBtn.disabled = true;
+        }
+        
+        // Create FormData object
+        const formData = new FormData(form);
+        
+        // Submit via fetch
+        fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': getCookie('csrftoken')
+          }
+        })
+        .then(response => {
+          if (response.redirected) {
+            // Handle redirect (form submitted successfully)
+            showToast('Success!', 'Lead saved successfully', 'success', 4000);
+            // Reset form
+            form.reset();
+            // Hide custom source field if it was shown
+            const customSourceField = document.getElementById('id_custom_source');
+            if (customSourceField) {
+              customSourceField.style.display = 'none';
+            }
+            // Reload page to show updated leads table
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          } else {
+            // Handle validation errors or other responses
+            return response.text().then(html => {
+              // Parse the response to check for error messages
+              if (html.includes('alert-error') || html.includes('error')) {
+                showToast('Error!', 'Failed to save lead. Please check the form and try again.', 'error', 5000);
+              } else {
+                // Assume success if no error indicators
+                showToast('Success!', 'Lead saved successfully', 'success', 4000);
+                form.reset();
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1000);
+              }
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Form submission error:', error);
+          showToast('Error!', 'Network error. Please try again.', 'error', 5000);
+        })
+        .finally(() => {
+          // Reset button state
+          if (saveBtn) {
+            saveBtn.textContent = 'Save Lead';
+            saveBtn.disabled = false;
+          }
         });
       }
     });
@@ -1230,6 +1402,48 @@
       loadTasks();
     });
 
+    // Toast notification functions
+    function showToast(title, message, type = 'success', duration = 5000) {
+      const toastContainer = document.getElementById('toastContainer');
+      if (!toastContainer) return;
+      
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+      const iconClass = type === 'success' ? 'toast-icon' : 'toast-icon';
+      
+      toast.innerHTML = `
+        <i class="fas ${icon} ${iconClass}"></i>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      
+      toastContainer.appendChild(toast);
+      
+      // Trigger animation
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 10);
+      
+      // Auto remove after duration
+      if (duration > 0) {
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => {
+            if (toast.parentNode) {
+              toast.parentNode.removeChild(toast);
+            }
+          }, 300);
+        }, duration);
+      }
+    }
+    
     // CSRF token helper function
     function getCookie(name) {
       let cookieValue = null;
@@ -1246,5 +1460,8 @@
       return cookieValue;
     }
   </script>
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
 </body>
 </html>
