@@ -115,6 +115,28 @@
     padding: 1.5rem;
     width: 100%;
     box-sizing: border-box;
+    /* Minimal scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+/* WebKit scrollbar hiding for Chrome/Safari */
+.report-list-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.report-list-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.report-list-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.report-list-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 /* Report Cards Layout */
 .report-cards {

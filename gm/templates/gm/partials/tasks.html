@@ -1053,35 +1053,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
   box-sizing: border-box;
 
+  /* Minimal scrollbar styling */
+
+  scrollbar-width: thin;
+
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+
 }
 
 
 
-/* Custom Scrollbar for task-cards */
+/* WebKit scrollbar hiding for Chrome/Safari */
 
 .task-cards::-webkit-scrollbar {
 
-    width: 8px; /* width of the scrollbar */
-
-}
-
-
-
-.task-cards::-webkit-scrollbar-thumb {
-
-    background-color: #888; /* color of the scrollbar thumb */
-
-    border-radius: 10px; /* roundness of the scrollbar thumb */
-
-    border: 2px solid var(--card-bg); /* creates a padding around thumb */
-
-}
-
-
-
-.task-cards::-webkit-scrollbar-thumb:hover {
-
-    background-color: #555; /* color of the scrollbar thumb on hover */
+  width: 4px;
 
 }
 
@@ -1089,9 +1075,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .task-cards::-webkit-scrollbar-track {
 
-    background: var(--card-bg); /* color of the scrollbar track */
+  background: transparent;
 
-    border-radius: 10px;
+}
+
+
+
+.task-cards::-webkit-scrollbar-thumb {
+
+  background: rgba(255, 255, 255, 0.15);
+
+  border-radius: 2px;
+
+  transition: background 0.2s ease;
+
+}
+
+
+
+.task-cards::-webkit-scrollbar-thumb:hover {
+
+  background: rgba(255, 255, 255, 0.25);
 
 }
 

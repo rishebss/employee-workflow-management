@@ -56,6 +56,28 @@
   max-height: calc(100vh - 250px); /* Same height as tasks */
   width: 100%;
   box-sizing: border-box;
+  /* Minimal scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+/* WebKit scrollbar hiding for Chrome/Safari */
+.staff-cards::-webkit-scrollbar {
+  width: 4px;
+}
+
+.staff-cards::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.staff-cards::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.staff-cards::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 .staff-card {
   background: var(--card-bg);

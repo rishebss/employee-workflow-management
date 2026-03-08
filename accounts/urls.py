@@ -6,6 +6,7 @@ app_name = 'accounts'
 urlpatterns = [
     path('', views.landing_page, name='landing'),  # Handles GET requests
     path('quick-login/', views.quick_login, name='quick_login'),  # Handles POST
+    path('logout/', views.logout_view, name='logout'),
     path('dashboard/', views.admission_dashboard, name='admission_dashboard'),
     path('executive-dashboard/', views.admission_executive_dashboard, name='admission_executive_dashboard'),
     path('media/', views.media_dashboard, name='media_dashboard'),

@@ -72,7 +72,7 @@
             flex-wrap: nowrap;
         }
         
-        .tabs-section {
+        .tabs-left {
             display: flex;
             gap: 0.5rem;
             flex-wrap: nowrap;
@@ -81,14 +81,8 @@
             scrollbar-width: none; /* Hide scrollbar for Firefox */
         }
         
-        .tabs-section::-webkit-scrollbar {
+        .tabs-left::-webkit-scrollbar {
             display: none; /* Hide scrollbar for Chrome/Safari */
-        }
-        
-        .search-section {
-            position: relative;
-            flex-shrink: 0;
-            min-width: 200px;
         }
         
         .tab-btn {
@@ -118,53 +112,27 @@
             border-color: var(--accent);
         }
         
-        /* Search Bar */
-        .search-box {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 6px;
-            padding: 0.4rem 0.75rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: border 0.2s ease;
-            min-width: 200px;
+            gap: 0.4rem;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         
-        .search-box:focus-within {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-        }
-        
-        .search-icon {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-        
-        .search-input {
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            flex: 1;
-            outline: none;
-        }
-        
-        .search-input::placeholder {
-            color: var(--text-tertiary);
-        }
-        
-        .search-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: var(--shadow-large);
-            z-index: 1000;
-            margin-top: 0.5rem;
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: translateY(-1px);
         }
         
         /* Content Area */
@@ -265,17 +233,8 @@
                 gap: 0.75rem;
             }
             
-            .tabs-section {
+            .tabs-left {
                 justify-content: flex-start;
-            }
-            
-            .search-section {
-                min-width: 150px;
-            }
-            
-            .search-box {
-                min-width: 150px;
-                width: 100%;
             }
         }
         
@@ -293,7 +252,7 @@
                 gap: 0.5rem;
             }
             
-            .tabs-section {
+            .tabs-left {
                 gap: 0.25rem;
                 padding: 0.1rem 0;
             }
@@ -303,18 +262,9 @@
                 font-size: 0.75rem;
             }
             
-            .search-section {
-                min-width: 120px;
-            }
-            
-            .search-box {
-                padding: 0.3rem 0.5rem;
-                font-size: 0.8rem;
-                min-width: 120px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
+            .logout-btn {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -324,7 +274,7 @@
         <!-- Floating Tab Navigation with Search -->
         <div class="floating-tabs">
             <div class="tabs-container">
-                <div class="tabs-section">
+                <div class="tabs-left">
                     <button class="tab-btn active" data-tab="overview">
                         <i class="fas fa-chart-pie"></i>
                         Overview
@@ -349,21 +299,12 @@
                         <i class="fas fa-graduation-cap"></i>
                         Students
                     </button>
-                     
-                    <button class="tab-btn" onclick="window.location='/admin'">
-                        <i class="fas fa-user-shield"></i>
-                        Admin Mode
-                    </button>
-                   
                 </div>
                 
-                <div class="search-section">
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="searchInput" class="search-input" placeholder="Search staff, leads, tasks...">
-                    </div>
-                    <div id="searchResults" class="search-results" style="display: none;"></div>
-                </div>
+                <button class="tab-btn logout-btn" onclick="window.location='{% url 'accounts:logout' %}'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
             </div>
         </div>
 
@@ -492,57 +433,6 @@
                     contentArea.innerHTML = '<div style="text-align: center; padding: 2rem; color: #ef4444;">Error loading content</div>';
                 });
         }
-
-        // Search functionality
-        let searchTimeout;
-        document.getElementById('searchInput').addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            const query = this.value.trim();
-            
-            if (query.length < 2) {
-                document.getElementById('searchResults').style.display = 'none';
-                return;
-            }
-            
-            searchTimeout = setTimeout(() => {
-                performSearch(query);
-            }, 300);
-        });
-
-        function performSearch(query) {
-            axios.get(`{% url "hob:search_data" %}?q=${encodeURIComponent(query)}`)
-                .then(response => {
-                    displaySearchResults(response.data.results);
-                })
-                .catch(error => {
-                    console.error('Search error:', error);
-                });
-        }
-
-        function displaySearchResults(results) {
-            const resultsContainer = document.getElementById('searchResults');
-            
-            if (results.length === 0) {
-                resultsContainer.innerHTML = '<div style="padding: 1rem; color: var(--text-secondary); text-align: center;">No results found</div>';
-            } else {
-                resultsContainer.innerHTML = results.map(result => `
-                    <div class="search-result-item" style="padding: 1rem; border-bottom: 1px solid var(--border-color); cursor: pointer;">
-                        <div style="font-weight: 600; color: var(--text-primary);">${result.title}</div>
-                        <div style="font-size: 0.9rem; color: var(--text-secondary);">${result.subtitle}</div>
-                        <div style="font-size: 0.8rem; color: var(--accent); margin-top: 0.25rem;">${result.type}</div>
-                    </div>
-                `).join('');
-            }
-            
-            resultsContainer.style.display = 'block';
-        }
-
-        // Close search results when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.search-container')) {
-                document.getElementById('searchResults').style.display = 'none';
-            }
-        });
 
         // Load initial tab content
         loadTabContent('overview');

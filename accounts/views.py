@@ -1,6 +1,6 @@
 from asyncio import tasks
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import User
@@ -96,6 +96,13 @@ def quick_login(request):
     except Exception as e:
         messages.error(request, f"An error occurred during login: {str(e)}")
         return redirect('accounts:landing')
+
+
+def logout_view(request):
+    """Logout the current user and redirect to landing page"""
+    logout(request)
+    messages.success(request, "You have been successfully logged out")
+    return redirect('accounts:landing')
 
 
 
